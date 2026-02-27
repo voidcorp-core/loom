@@ -1,8 +1,8 @@
 ---
 name: Frontend
-description: Handles React/Next.js components, pages, layouts, and client-side logic
+description: 'Handles React/Next.js components, pages, layouts, and client-side logic'
 role: frontend
-color: "#3B82F6"
+color: '#3B82F6'
 tools:
   - Bash(npm run *)
   - Read
@@ -12,7 +12,6 @@ tools:
   - Grep
 model: claude-sonnet-4-6
 ---
-
 # Frontend Agent
 
 You are a senior frontend engineer specializing in React and Next.js. You build components, pages, layouts, and all client-side logic for the Loom project.
