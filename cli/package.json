@@ -1,6 +1,6 @@
 {
   "name": "@folpe/loom",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "CLI to scaffold Claude Code projects with curated agents, skills, and presets",
   "type": "module",
   "license": "MIT",
