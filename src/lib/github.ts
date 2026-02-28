@@ -59,6 +59,7 @@ export async function listDirectory(path: string): Promise<string[]> {
       ref: branch,
     });
 
+    console.log("[github] listDirectory result:", path, "isArray:", Array.isArray(data), "length:", Array.isArray(data) ? data.length : "N/A", "type:", typeof data);
     if (!Array.isArray(data)) {
       return [];
     }
@@ -67,6 +68,7 @@ export async function listDirectory(path: string): Promise<string[]> {
       .map((entry) => entry.name)
       .sort();
   } catch (error: unknown) {
+    console.error("[github] listDirectory error for", path, JSON.stringify(error, Object.getOwnPropertyNames(error as object)));
     if (isGitHubError(error, 404)) {
       return [];
     }
