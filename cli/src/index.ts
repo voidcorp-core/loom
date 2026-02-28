@@ -1,14 +1,18 @@
+import { createRequire } from "node:module";
 import { Command } from "commander";
 import { listCommand } from "./commands/list.js";
 import { addCommand } from "./commands/add.js";
 import { initCommand } from "./commands/init.js";
+
+const require = createRequire(import.meta.url);
+const { version } = require("../package.json");
 
 const program = new Command();
 
 program
   .name("loom")
   .description("Integrate Loom library (agents, skills, presets) into your project")
-  .version("0.1.0");
+  .version(version);
 
 program
   .command("list")
