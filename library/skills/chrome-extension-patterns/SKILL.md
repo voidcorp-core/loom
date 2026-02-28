@@ -1,14 +1,21 @@
 ---
 name: chrome-extension-patterns
-description: "Chrome extension development patterns for Manifest V3, content scripts, popup UI, and service workers. Use when building browser extensions."
-allowed-tools: "Read, Write, Edit, Glob, Grep"
+description: "Chrome extension development patterns for Manifest V3, content scripts, popup UI, service workers, messaging, and storage. Use when building browser extensions, creating content scripts, setting up background service workers, or implementing extension popup interfaces."
 ---
 
 # Chrome Extension Patterns (Manifest V3)
 
+## Critical Rules
+
+- **Always use Manifest V3** — Manifest V2 is deprecated and no longer accepted.
+- **Minimal permissions** — request only what the extension needs; use `activeTab` over `<all_urls>`.
+- **Never use `setInterval` in service workers** — use `chrome.alarms` for periodic tasks.
+- **Never use `innerHTML` with user input** — use `textContent` to prevent XSS.
+- **Never include API keys in content scripts** — they are visible to the host page.
+- **Never use `localStorage` in content scripts** — it belongs to the host page; use `chrome.storage`.
+
 ## Manifest
 
-- Always use **Manifest V3** — Manifest V2 is deprecated.
 - Define minimal permissions — request only what the extension needs:
   ```json
   {
@@ -65,8 +72,8 @@ allowed-tools: "Read, Write, Edit, Glob, Grep"
 
 ## Messaging
 
-- Use `chrome.runtime.sendMessage` for popup/options ↔ background communication.
-- Use `chrome.tabs.sendMessage` for background → content script communication.
+- Use `chrome.runtime.sendMessage` for popup/options <-> background communication.
+- Use `chrome.tabs.sendMessage` for background -> content script communication.
 - Define a message type system for type-safe messaging:
   ```ts
   type Message =
@@ -94,5 +101,5 @@ allowed-tools: "Read, Write, Edit, Glob, Grep"
 
 - Use `chrome://extensions` with Developer Mode for loading unpacked extensions.
 - Enable "Errors" view for debugging service worker issues.
-- Use Chrome DevTools to inspect popup (right-click → Inspect) and background (service worker link).
+- Use Chrome DevTools to inspect popup (right-click -> Inspect) and background (service worker link).
 - Hot-reload: rebuild with tsup watch, then click "Update" in `chrome://extensions`.

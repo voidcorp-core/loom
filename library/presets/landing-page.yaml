@@ -36,6 +36,3 @@ claudemd:
     This is a landing page / marketing site scaffolded with Loom. It focuses on SEO, conversion
     optimization, and fast loading. The orchestrator delegates visual tasks to the frontend and
     ux-ui agents, copywriting to marketing, and performance audits to the performance agent.
-  orchestratorRef: >
-    The orchestrator agent (.claude/agents/orchestrator.md) is the main entry point. Always start
-    by delegating to the orchestrator, which will route tasks to the appropriate specialized agent.

@@ -1,19 +1,25 @@
 ---
 name: ui-ux-guidelines
-description: "Comprehensive UI/UX design intelligence: accessibility, interaction patterns, typography, color palettes, animation rules, and pre-delivery checklist. Use when building any user-facing interface. Inspired by nextlevelbuilder/ui-ux-pro-max-skill."
-allowed-tools: "Read, Write, Edit, Glob, Grep"
+description: "UI/UX design rules for accessibility, interaction, typography, color, and animation. Use when building user-facing interfaces, reviewing designs, checking accessibility compliance, or choosing fonts and color palettes."
 ---
 
 # UI/UX Design Guidelines
 
 Comprehensive design guide covering accessibility, interaction, layout, typography, color, and animation — prioritized by impact.
 
+## Critical Rules
+
+- **Color contrast**: minimum 4.5:1 for normal text, 3:1 for large text.
+- **Touch targets**: minimum 44x44px on mobile.
+- **No `h-screen`** — use `h-dvh` for correct mobile viewport.
+- **No animation unless requested** — respect `prefers-reduced-motion`.
+- **Empty states must have one clear next action** — never blank screens.
+- **All icon-only buttons must have `aria-label`**.
+
 ## Priority 1 — Accessibility (CRITICAL)
 
-- **Color contrast**: minimum 4.5:1 ratio for normal text, 3:1 for large text.
 - **Color is not enough**: never convey information by color alone — add icons or text.
 - **Alt text**: descriptive alt for all meaningful images. Use `alt=""` only for decorative images.
-- **ARIA labels**: every icon-only button must have `aria-label`.
 - **Heading hierarchy**: sequential h1 → h2 → h3, one `<h1>` per page.
 - **Keyboard navigation**: tab order matches visual order, no keyboard traps.
 - **Focus states**: visible focus rings on all interactive elements — never `outline-none` without replacement.
@@ -24,7 +30,6 @@ Comprehensive design guide covering accessibility, interaction, layout, typograp
 
 ## Priority 2 — Touch & Interaction (CRITICAL)
 
-- **Touch targets**: minimum 44x44px on mobile — `min-h-[44px] min-w-[44px]`.
 - **Touch spacing**: minimum 8px gap between adjacent touch targets.
 - **Hover vs tap**: never rely on hover for primary interactions — use click/tap.
 - **Cursor pointer**: add `cursor-pointer` to all clickable elements.

@@ -1,10 +1,18 @@
 ---
 name: shadcn-ui
-description: "ShadCN UI component patterns, composition, and accessibility guidelines. Use when building interfaces with ShadCN components. Inspired by ibelick/ui-skills baseline-ui."
-allowed-tools: "Read, Write, Edit, Glob, Grep"
+description: "ShadCN UI component patterns, forms, data tables, and page layouts. Use when building interfaces with ShadCN components, creating forms with react-hook-form, tables with TanStack Table, or designing page layouts."
 ---
 
 # ShadCN UI Patterns
+
+## Critical Rules
+
+- **Always use ShadCN primitives first** — before building custom components.
+- **Never rebuild keyboard or focus behavior** — use the component primitives.
+- **Never mix primitive systems** — don't combine Radix, Headless UI, React Aria in the same surface.
+- **Never use `h-screen`** — use `h-dvh` for correct mobile viewport.
+- **Empty states must have one clear next action** — never blank screens.
+- **No gradients or glow effects** unless explicitly requested.
 
 ## Installation & Setup
 
@@ -27,8 +35,6 @@ allowed-tools: "Read, Write, Edit, Glob, Grep"
   - `Badge` for tags and status indicators
   - `Tabs` for content switching
   - `Toast` / `Sonner` for notifications
-- Never rebuild keyboard or focus behavior by hand — use the component primitives.
-- Never mix primitive systems (Radix, Headless UI, React Aria) within the same surface.
 
 ## Forms
 
@@ -52,6 +58,8 @@ allowed-tools: "Read, Write, Edit, Glob, Grep"
   - Add row actions via `DropdownMenu`.
 - Use `tabular-nums` on numeric columns for alignment.
 - Add loading skeletons with ShadCN `Skeleton` for async data.
+- **Toolbar pattern**: search input + result counter + limit selector in every table.
+- Hide columns progressively by breakpoint: `hidden sm:table-cell`, `hidden md:table-cell`.
 
 ## Dialogs & Alerts
 
@@ -59,6 +67,40 @@ allowed-tools: "Read, Write, Edit, Glob, Grep"
 - Use `AlertDialog` for destructive or irreversible actions — never a plain `Dialog`.
 - Keep dialog content focused — one primary action per dialog.
 - Always provide a way to dismiss (close button, escape key, outside click).
+
+## Page Layout Pattern
+
+Structure pages with Cards for consistent visual hierarchy:
+
+```tsx
+// Header → Cards → Footer pattern
+<div className="space-y-6">
+  <div className="flex items-center justify-between">
+    <h1 className="text-3xl font-bold tracking-tight">Page Title</h1>
+    <Button>Primary Action</Button>
+  </div>
+
+  <Card>
+    <CardHeader><CardTitle>Section</CardTitle></CardHeader>
+    <CardContent>{/* content */}</CardContent>
+  </Card>
+</div>
+```
+
+- Multi-Card forms: split complex forms into logical Card sections.
+- Use `CardHeader` + `CardTitle` + `CardDescription` for section context.
+
+## Charts
+
+- Use `ChartContainer` from ShadCN with Recharts for data visualization.
+- Wrap charts in a `Card` with descriptive `CardHeader`.
+- Always include a `ChartTooltip` for data point details.
+
+## File Upload
+
+- Use a `FileUpload` dropzone component with drag-and-drop support.
+- Show preview for images, file name + size for documents.
+- Validate file type and size client-side before upload.
 
 ## Theming
 
@@ -82,11 +124,3 @@ allowed-tools: "Read, Write, Edit, Glob, Grep"
 - Keep interaction feedback under 200ms.
 - Avoid animating layout properties (`width`, `height`, `margin`, `padding`) — use `transform` and `opacity` only.
 - Respect `prefers-reduced-motion` media query.
-
-## Anti-Patterns to Avoid
-
-- Never use `h-screen` — use `h-dvh` for correct mobile viewport.
-- Never use arbitrary `z-index` values — use a fixed scale.
-- Never use gradients or glow effects unless explicitly requested.
-- Never use custom easing curves unless explicitly requested.
-- Empty states must have one clear next action.

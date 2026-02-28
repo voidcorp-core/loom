@@ -23,6 +23,13 @@ export function writeSkill(slug: string, content: string, cwd = process.cwd()): 
   return filePath;
 }
 
+export function writeOrchestrator(content: string, cwd = process.cwd()): string {
+  const filePath = path.join(cwd, CLAUDE_DIR, "orchestrator.md");
+  ensureDir(path.dirname(filePath));
+  fs.writeFileSync(filePath, content, "utf-8");
+  return filePath;
+}
+
 export function writeClaudeMd(content: string, cwd = process.cwd()): string {
   const filePath = path.join(cwd, "CLAUDE.md");
   fs.writeFileSync(filePath, content, "utf-8");

@@ -1,10 +1,18 @@
 ---
 name: api-design
-description: "REST API design principles, error handling, validation, and security patterns. Use when building API routes, server actions, or backend services."
-allowed-tools: "Read, Write, Edit, Glob, Grep"
+description: "REST API design with validation, error handling, auth wrappers, and facades. Use when building API routes, server actions, implementing auth middleware, or designing backend services."
 ---
 
 # API Design Principles
+
+## Critical Rules
+
+- **Validate all incoming data** with Zod schemas at the API boundary.
+- **Never expose stack traces** or internal details in production error responses.
+- **Always use facades** between presentation and services.
+- **Auth wrappers on every protected endpoint** — `withAuth()`, `withAdmin()`.
+- **Consistent response shapes** — `{ data }` for success, `{ error, code }` for errors.
+- **Parameterized queries only** — never string concatenation for SQL.
 
 ## Route Structure
 
@@ -81,6 +89,39 @@ allowed-tools: "Read, Write, Edit, Glob, Grep"
 - Extract user from session/token, never from request body.
 - Check permissions at the resource level: "Can this user access THIS specific post?"
 - Return `401` for missing/invalid auth, `403` for insufficient permissions.
+
+### Auth Wrappers
+
+Use auth wrapper functions for consistent protection:
+
+```ts
+// Require any authenticated user
+export async function withAuth() {
+  const user = await getCurrentUser();
+  if (!user) throw new ApiError(401, "Unauthorized");
+  return user;
+}
+
+// Require authenticated user with valid token
+export async function withAuthToken(request: Request) {
+  const token = request.headers.get("authorization")?.replace("Bearer ", "");
+  if (!token) throw new ApiError(401, "Missing token");
+  return verifyToken(token);
+}
+
+// Dynamic auth — optional session, different behavior for authed/unauthed
+export async function withDynamicAuth() {
+  const user = await getCurrentUser();
+  return { user, isAuthenticated: !!user };
+}
+```
+
+## Facades
+
+- **Always use facades** between presentation and services.
+- One facade per domain entity in `src/facades/`.
+- Facades handle auth context extraction and coordinate service calls.
+- Routes/pages call facades — never services directly.
 
 ## Rate Limiting
 

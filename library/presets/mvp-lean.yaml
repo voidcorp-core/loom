@@ -33,6 +33,3 @@ claudemd:
     This is a lean MVP scaffolded with Loom. Speed and iteration are prioritized over architecture.
     The orchestrator coordinates a small team of frontend, backend, and database agents to ship
     features as fast as possible.
-  orchestratorRef: >
-    The orchestrator agent (.claude/agents/orchestrator.md) is the main entry point. Always start
-    by delegating to the orchestrator, which will route tasks to the appropriate specialized agent.

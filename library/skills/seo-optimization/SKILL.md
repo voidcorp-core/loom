@@ -1,10 +1,18 @@
 ---
 name: seo-optimization
-description: "SEO best practices for structured data, meta tags, Core Web Vitals, and indexing. Use when building landing pages, marketing sites, or public-facing content."
-allowed-tools: "Read, Write, Edit, Glob, Grep"
+description: "SEO best practices for structured data, meta tags, Core Web Vitals, and indexing. Use when building landing pages, optimizing page metadata, adding JSON-LD structured data, generating sitemaps, or improving search engine performance."
 ---
 
 # SEO Optimization
+
+## Critical Rules
+
+- **Every page must have unique `title` and `description`** — never duplicate meta tags.
+- **One `<h1>` per page** — use proper heading hierarchy `h1` -> `h2` -> `h3`.
+- **Use semantic HTML** — `<main>`, `<article>`, `<section>`, `<nav>`, `<aside>`, `<footer>`.
+- **All images must have `alt` text** — descriptive, not keyword-stuffed.
+- **Target Core Web Vitals** — LCP < 2.5s, INP < 200ms, CLS < 0.1.
+- **Generate `sitemap.xml` and `robots.txt`** — never leave them missing on public sites.
 
 ## Meta Tags
 

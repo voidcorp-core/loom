@@ -7,6 +7,9 @@ tools:
   - Read
   - Write
   - Edit
+skills:
+  - hero-copywriting
+  - seo-optimization
 model: claude-sonnet-4-6
 ---
 

@@ -47,6 +47,3 @@ claudemd:
     This is an e-commerce application scaffolded with Loom. It includes product catalog, shopping
     cart, Stripe checkout, and transactional emails. The orchestrator coordinates the full agent
     team including marketing for copywriting and SEO.
-  orchestratorRef: >
-    The orchestrator agent (.claude/agents/orchestrator.md) is the main entry point. Always start
-    by delegating to the orchestrator, which will route tasks to the appropriate specialized agent.

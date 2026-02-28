@@ -9,6 +9,9 @@ tools:
   - Edit
   - Glob
   - Grep
+skills:
+  - auth-rbac
+  - better-auth-patterns
 model: claude-sonnet-4-6
 ---
 

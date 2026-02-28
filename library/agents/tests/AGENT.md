@@ -10,6 +10,8 @@ tools:
   - Edit
   - Glob
   - Grep
+skills:
+  - testing-patterns
 model: claude-sonnet-4-6
 ---
 

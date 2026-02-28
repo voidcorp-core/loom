@@ -29,8 +29,6 @@ export default function NewPresetPage() {
   const [stack, setStack] = useState("");
   const [conventions, setConventions] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
-  const [orchestratorRef, setOrchestratorRef] = useState("");
-
   useEffect(() => {
     listSkillsAction().then(setAvailableSkills);
     listAgentsAction().then(setAvailableAgents);
@@ -74,9 +72,6 @@ export default function NewPresetPage() {
         },
         claudemd: {
           projectDescription,
-          orchestratorRef:
-            orchestratorRef ||
-            "Use the orchestrator agent as the main coordinator.",
         },
       });
       toast.success("Preset created");
@@ -244,16 +239,6 @@ export default function NewPresetPage() {
                 value={projectDescription}
                 onChange={(e) => setProjectDescription(e.target.value)}
                 placeholder="Description to include in the generated CLAUDE.md"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">
-                Orchestrator Reference
-              </label>
-              <Input
-                value={orchestratorRef}
-                onChange={(e) => setOrchestratorRef(e.target.value)}
-                placeholder="Use the orchestrator agent..."
               />
             </div>
           </CardContent>

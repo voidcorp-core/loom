@@ -43,6 +43,3 @@ claudemd:
     This is a fullstack SaaS with complete authentication scaffolded with Loom. It includes email,
     OAuth, and magic link flows via Supabase Auth, plus RBAC and admin dashboard. The orchestrator
     coordinates security, frontend, backend, and database agents for auth-related tasks.
-  orchestratorRef: >
-    The orchestrator agent (.claude/agents/orchestrator.md) is the main entry point. Always start
-    by delegating to the orchestrator, which will route tasks to the appropriate specialized agent.

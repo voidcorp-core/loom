@@ -7,11 +7,12 @@ import YAML from "yaml";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.resolve(__dirname, "../data");
 
-interface AgentSummary {
+export interface AgentSummary {
   slug: string;
   name: string;
   description: string;
   role: string;
+  skills: string[];
 }
 
 interface SkillSummary {
@@ -42,7 +43,6 @@ export interface Preset {
   };
   claudemd: {
     projectDescription: string;
-    orchestratorRef: string;
   };
 }
 
@@ -76,14 +76,16 @@ export async function listAgents(): Promise<AgentSummary[]> {
     try {
       const raw = fs.readFileSync(filePath, "utf-8");
       const { data } = matter(raw);
+      const fm = data as Record<string, unknown>;
       agents.push({
         slug,
-        name: (data as Record<string, string>).name || slug,
-        description: (data as Record<string, string>).description || "",
-        role: (data as Record<string, string>).role || "",
+        name: (fm.name as string) || slug,
+        description: (fm.description as string) || "",
+        role: (fm.role as string) || "",
+        skills: Array.isArray(fm.skills) ? (fm.skills as string[]) : [],
       });
     } catch {
-      agents.push({ slug, name: slug, description: "", role: "" });
+      agents.push({ slug, name: slug, description: "", role: "", skills: [] });
     }
   }
   return agents;

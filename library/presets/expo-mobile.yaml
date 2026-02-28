@@ -39,6 +39,3 @@ claudemd:
     NativeWind for styling and Expo Router for navigation. The orchestrator delegates mobile UI
     to the frontend agent, API integration to the backend agent, and native feature testing
     to the tests agent.
-  orchestratorRef: >
-    The orchestrator agent (.claude/agents/orchestrator.md) is the main entry point. Always start
-    by delegating to the orchestrator, which will route tasks to the appropriate specialized agent.

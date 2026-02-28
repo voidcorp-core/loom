@@ -8,6 +8,9 @@ tools:
   - Read
   - Write
   - Edit
+skills:
+  - supabase-patterns
+  - drizzle-patterns
 model: claude-sonnet-4-6
 ---
 

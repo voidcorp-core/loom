@@ -1,18 +1,26 @@
 ---
 name: supabase-patterns
-description: "Supabase best practices for auth, database, RLS, and real-time. Use when working with Supabase in any project. Inspired by supabase/agent-skills."
-allowed-tools: "Read, Write, Edit, Glob, Grep"
+description: "Supabase patterns for auth, database, RLS, storage, and real-time. Use when working with Supabase, writing RLS policies, implementing auth flows, or managing file storage."
 ---
 
 # Supabase Patterns
 
+## Critical Rules
+
+- **Enable RLS on every table — no exceptions**, even internal tables.
+- **Always validate session server-side** — never trust client-side `getUser()` alone.
+- **Use `@supabase/ssr`** — never `@supabase/auth-helpers-nextjs` (deprecated).
+- **Handle errors explicitly** — never ignore the `error` return value.
+- **Use `LIMIT`** on all queries — never fetch unbounded result sets.
+- **RLS policies on storage buckets** — no exceptions.
+
 ## Authentication
 
-- Use `@supabase/ssr` for Next.js server-side auth — never use `@supabase/auth-helpers-nextjs` (deprecated).
+- Use `@supabase/ssr` for Next.js server-side auth.
 - Create two client helpers:
   - `createClient()` in `src/lib/supabase/client.ts` for Client Components
   - `createServerClient()` in `src/lib/supabase/server.ts` for Server Components / Actions
-- Always validate session server-side before granting access. Never trust `supabase.auth.getUser()` from the client alone.
+- Always validate session server-side before granting access.
 - Use middleware (`middleware.ts`) to refresh the session on every request:
   ```ts
   const { data: { user } } = await supabase.auth.getUser()
@@ -25,7 +33,6 @@ allowed-tools: "Read, Write, Edit, Glob, Grep"
 
 ## Row Level Security (RLS)
 
-- **Enable RLS on every table** — no exceptions, even internal tables.
 - Write policies that reference `auth.uid()` directly:
   ```sql
   CREATE POLICY "Users read own data"
@@ -82,8 +89,18 @@ allowed-tools: "Read, Write, Edit, Glob, Grep"
 
 - Use Supabase Storage for file uploads (images, documents).
 - Create separate buckets for public vs private files.
-- Set RLS policies on storage buckets.
+- Set RLS policies on storage buckets — **no exceptions**.
 - Generate signed URLs for private files with short expiration times.
+- File upload pattern:
+  ```ts
+  const { data, error } = await supabase.storage
+    .from("avatars")
+    .upload(`${userId}/${fileName}`, file, {
+      cacheControl: "3600",
+      upsert: true,
+    });
+  ```
+- Get public URL: `supabase.storage.from("avatars").getPublicUrl(path)`.
 
 ## Performance
 

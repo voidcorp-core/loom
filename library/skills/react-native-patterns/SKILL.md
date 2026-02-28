@@ -1,10 +1,18 @@
 ---
 name: react-native-patterns
-description: "React Native and Expo best practices for navigation, styling, performance, and native features. Use when building mobile apps with Expo. Inspired by callstackincubator/agent-skills and expo/skills."
-allowed-tools: "Read, Write, Edit, Glob, Grep"
+description: "React Native and Expo best practices for navigation, styling, performance, and native features. Use when building mobile apps with Expo, implementing React Native navigation, styling with NativeWind, optimizing mobile performance, or adding push notifications."
 ---
 
 # React Native & Expo Patterns
+
+## Critical Rules
+
+- **Always try Expo Go first** — only use `npx expo run:ios/android` when custom native modules are required.
+- **Functional components only** — never class components.
+- **Use `expo-image` instead of React Native's `Image`** — better caching and performance.
+- **Use `react-native-safe-area-context`** — never React Native's built-in `SafeAreaView`.
+- **Use `FlashList` instead of `FlatList`** for large lists — significantly better performance.
+- **Never block the JS thread** — target 60fps, offload heavy computation to native.
 
 ## Expo Router
 
@@ -22,12 +30,6 @@ allowed-tools: "Read, Write, Edit, Glob, Grep"
 - Use `cn()` helper for conditional classes.
 - Prefer `useWindowDimensions` over `Dimensions.get()` for responsive layouts.
 - Use flexbox exclusively for layout — avoid absolute positioning except for overlays.
-
-## Running the App
-
-- **Always try Expo Go first** before creating custom builds (`npx expo start`).
-- Only use `npx expo run:ios/android` when custom native modules are required.
-- Expo Go supports: all `expo-*` packages, Expo Router, Reanimated, Gesture Handler.
 
 ## Components
 

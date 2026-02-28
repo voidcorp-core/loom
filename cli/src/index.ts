@@ -31,8 +31,12 @@ program
   .command("init")
   .description("Initialize a project with a preset (agents + skills + CLAUDE.md)")
   .argument("[preset]", "Preset slug (interactive if omitted)")
-  .action(async (preset?: string) => {
-    await initCommand(preset);
+  .option("--add-agent <slugs...>", "Add extra agents")
+  .option("--remove-agent <slugs...>", "Remove agents from preset")
+  .option("--add-skill <slugs...>", "Add extra skills")
+  .option("--remove-skill <slugs...>", "Remove skills from preset")
+  .action(async (preset: string | undefined, opts: Record<string, unknown>) => {
+    await initCommand(preset, opts as import("./commands/init.js").InitOptions);
   });
 
 program.parse();

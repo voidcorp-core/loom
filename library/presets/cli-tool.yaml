@@ -29,6 +29,3 @@ claudemd:
     This is a CLI tool scaffolded with Loom. It uses Commander.js for argument parsing and tsup
     for bundling. The orchestrator delegates implementation to the backend agent and testing to
     the tests agent.
-  orchestratorRef: >
-    The orchestrator agent (.claude/agents/orchestrator.md) is the main entry point. Always start
-    by delegating to the orchestrator, which will route tasks to the appropriate specialized agent.

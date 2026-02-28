@@ -7,7 +7,6 @@ export interface PresetConstitution {
 
 export interface PresetClaudeMd {
   projectDescription: string;
-  orchestratorRef: string;
 }
 
 export interface Preset {

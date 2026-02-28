@@ -10,6 +10,18 @@ tools:
   - Edit
   - Glob
   - Grep
+skills:
+  - supabase-patterns
+  - api-design
+  - nextjs-conventions
+  - layered-architecture
+  - server-actions-patterns
+  - drizzle-patterns
+  - auth-rbac
+  - i18n-patterns
+  - env-validation
+  - resend-email
+  - better-auth-patterns
 model: claude-sonnet-4-6
 ---
 

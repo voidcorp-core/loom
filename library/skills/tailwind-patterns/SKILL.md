@@ -1,10 +1,17 @@
 ---
 name: tailwind-patterns
-description: "Provides Tailwind CSS patterns, utility conventions, and component styling guidelines. Use when building UI with Tailwind CSS."
-allowed-tools: "Read, Write, Edit"
+description: "Tailwind CSS utility conventions, responsive design, and component styling. Use when styling components, implementing responsive layouts, or applying consistent spacing and typography."
 ---
 
 # Tailwind CSS Patterns
+
+## Critical Rules
+
+- **Utility-first** — use utility classes directly in JSX, avoid `@apply`.
+- **Mobile-first** — base styles for mobile, then `sm:`, `md:`, `lg:`, `xl:`.
+- **Semantic color tokens** — use `bg-background`, `text-foreground`, never hardcode hex.
+- **Progressive padding** — `px-0 sm:px-2 md:px-4 lg:px-6` grows with viewport.
+- **Use `cn()`** — from `@/lib/utils` for conditional and merged classes.
 
 ## Utility-First Approach
 
@@ -30,6 +37,9 @@ allowed-tools: "Read, Write, Edit"
   - `lg:` (1024px) — laptops
   - `xl:` (1280px) — desktops
 - Grid responsive pattern: `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3`
+- **Progressive padding**: `px-0 sm:px-2 md:px-4 lg:px-6` — spacing grows with viewport.
+- **Cards border adaptatif**: `border-0 sm:border` — no border on mobile, border on larger screens.
+- **Table columns by breakpoint**: hide non-essential columns on small screens with `hidden sm:table-cell`, `hidden md:table-cell`, `hidden lg:table-cell`.
 
 ## Typography
 

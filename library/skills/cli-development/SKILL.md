@@ -1,10 +1,18 @@
 ---
 name: cli-development
-description: "CLI tool development patterns for Node.js with Commander.js, terminal UX, and npm distribution. Use when building command-line tools."
-allowed-tools: "Read, Write, Edit, Glob, Grep"
+description: "CLI tool development patterns for Node.js with Commander.js, terminal UX, error handling, and npm distribution. Use when building command-line tools, adding CLI commands, implementing terminal prompts, or bundling CLI binaries for distribution."
 ---
 
 # CLI Development Patterns
+
+## Critical Rules
+
+- **Use `stdout` for data, `stderr` for logs** — never mix output channels.
+- **Exit with proper codes** — `0` success, `1` runtime error, `2` usage error.
+- **Never show raw stack traces** — log them with `--verbose` flag only.
+- **Respect `NO_COLOR`** — check `process.env.NO_COLOR` before using colors.
+- **Validate config with Zod** — fail fast with clear error on invalid config.
+- **Confirm destructive actions** — always prompt before irreversible operations.
 
 ## Project Structure
 
@@ -71,7 +79,7 @@ src/
 
 - Show a spinner for long operations (use `ora` or `nanospinner`).
 - Use progress bars for multi-step or percentage-based operations.
-- Confirm destructive actions with a prompt (use `@inquirer/prompts`):
+- Confirm destructive actions with a prompt (use `@inquirer/prompts` or `@clack/prompts`):
   ```ts
   const confirmed = await confirm({ message: 'Delete all files?' })
   if (!confirmed) process.exit(0)

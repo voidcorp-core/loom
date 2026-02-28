@@ -1,10 +1,18 @@
 ---
 name: stripe-integration
-description: "Stripe payment integration patterns for checkout, subscriptions, and webhooks. Use when building e-commerce, SaaS billing, or any payment flow."
-allowed-tools: "Read, Write, Edit, Glob, Grep"
+description: "Stripe payment integration patterns for checkout, subscriptions, webhooks, and customer portal. Use when implementing payments, building SaaS billing, handling Stripe webhooks, creating checkout flows, or managing subscription lifecycle."
 ---
 
 # Stripe Integration
+
+## Critical Rules
+
+- **Always use Stripe Checkout or Payment Elements** — never collect card details directly.
+- **Always verify webhook signatures** — never trust unverified payloads.
+- **Never expose `STRIPE_SECRET_KEY` to the client** — server-side only.
+- **Make webhook handlers idempotent** — the same event may arrive multiple times.
+- **Use `metadata` to link Stripe objects to database records** — always pass `userId`, `orderId`.
+- **Use `idempotencyKey` for critical operations** — prevent duplicate charges.
 
 ## Setup
 
@@ -21,7 +29,7 @@ allowed-tools: "Read, Write, Edit, Glob, Grep"
 
 ## Checkout
 
-- **Always use Stripe Checkout or Payment Elements** — never collect card details directly.
+- Always use Stripe Checkout or Payment Elements — never collect card details directly.
 - Create a Checkout Session server-side, redirect client-side:
   ```ts
   const session = await stripe.checkout.sessions.create({

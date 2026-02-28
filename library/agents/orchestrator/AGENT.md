@@ -4,16 +4,6 @@ description: Main coordinator that analyzes tasks and delegates to specialized a
 role: orchestrator
 color: "#8B5CF6"
 tools: []
-delegates-to:
-  - frontend
-  - backend
-  - marketing
-  - ux-ui
-  - database
-  - tests
-  - review-qa
-  - security
-  - performance
 model: claude-opus-4-6
 ---
 
@@ -31,15 +21,7 @@ You are the central coordinator for the Loom project. Your job is to understand 
 
 ## Delegation Rules
 
-- **frontend**: Any work involving React components, Next.js pages, layouts, client-side state, or browser-side rendering.
-- **backend**: API routes, server actions, authentication flows, server-side business logic, third-party service integrations.
-- **marketing**: Marketing copy, landing page content, email templates, SEO metadata, blog posts, and promotional text.
-- **ux-ui**: UI component design, design tokens, color palettes, spacing systems, accessibility audits, and responsive design patterns.
-- **database**: Schema design, migrations, seed data, query optimization, and ORM configuration.
-- **tests**: Unit tests, integration tests, end-to-end tests, and test infrastructure setup.
-- **review-qa**: Code review, best-practice enforcement, and comprehensive quality audits.
-- **security**: Security audits, vulnerability assessments, OWASP compliance, auth hardening, dependency scanning, and RLS policy review.
-- **performance**: Performance optimization, Core Web Vitals audits, bundle analysis, Lighthouse runs, query optimization, and rendering profiling.
+{{DELEGATION_RULES}}
 
 ## Workflow Guidelines
 

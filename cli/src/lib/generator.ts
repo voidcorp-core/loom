@@ -1,9 +1,17 @@
+import matter from "gray-matter";
 import type { Preset } from "./library.js";
 
 interface AgentInfo {
   slug: string;
   name: string;
   role: string;
+}
+
+export interface AgentWithSkills {
+  slug: string;
+  name: string;
+  description: string;
+  skills: string[];
 }
 
 export function generateClaudeMd(
@@ -62,12 +70,47 @@ export function generateClaudeMd(
     lines.push("");
   }
 
-  // Orchestrator
-  if (preset.claudemd.orchestratorRef) {
-    lines.push("## Orchestrator");
-    lines.push(preset.claudemd.orchestratorRef);
-    lines.push("");
-  }
+  // Orchestrator (always present)
+  lines.push("## Orchestrator");
+  lines.push("");
+  lines.push("Use the orchestrator agent (`.claude/orchestrator.md`) as the main coordinator. It will analyze tasks, break them into subtasks, and delegate to the appropriate specialized agents listed above.");
+  lines.push("");
 
   return lines.join("\n");
+}
+
+export function generateOrchestrator(
+  templateContent: string,
+  agents: AgentWithSkills[],
+  presetSkills: string[]
+): string {
+  const { data: frontmatter, content } = matter(templateContent);
+
+  // Build delegation rules
+  const rules: string[] = [];
+  const delegatesTo: string[] = [];
+
+  for (const agent of agents) {
+    if (agent.slug === "orchestrator") continue;
+
+    delegatesTo.push(agent.slug);
+
+    // Filter agent skills to only those present in the preset
+    const relevantSkills = agent.skills.filter((s) => presetSkills.includes(s));
+
+    let line = `- **${agent.slug}**: ${agent.description}`;
+    if (relevantSkills.length > 0) {
+      line += `. Skills: ${relevantSkills.join(", ")}`;
+    }
+    rules.push(line);
+  }
+
+  // Rebuild frontmatter with delegates-to
+  const newFrontmatter = { ...frontmatter, "delegates-to": delegatesTo };
+
+  // Replace placeholder in content
+  const newContent = content.replace("{{DELEGATION_RULES}}", rules.join("\n"));
+
+  // Reassemble with gray-matter
+  return matter.stringify(newContent, newFrontmatter);
 }

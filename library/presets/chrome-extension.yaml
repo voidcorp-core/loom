@@ -34,6 +34,3 @@ claudemd:
     This is a Chrome extension scaffolded with Loom using Manifest V3. The orchestrator delegates
     popup/options UI work to the frontend agent, background worker logic to the backend agent,
     and security reviews of permissions and content scripts to the security agent.
-  orchestratorRef: >
-    The orchestrator agent (.claude/agents/orchestrator.md) is the main entry point. Always start
-    by delegating to the orchestrator, which will route tasks to the appropriate specialized agent.

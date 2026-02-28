@@ -9,6 +9,11 @@ tools:
   - Edit
   - Glob
   - Grep
+skills:
+  - ui-ux-guidelines
+  - shadcn-ui
+  - tailwind-patterns
+  - table-pagination
 model: claude-sonnet-4-6
 ---
 

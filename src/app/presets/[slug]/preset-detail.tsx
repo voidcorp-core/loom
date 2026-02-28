@@ -37,10 +37,6 @@ export function PresetDetail({ preset }: { preset: Preset }) {
   const [projectDescription, setProjectDescription] = useState(
     preset.claudemd.projectDescription
   );
-  const [orchestratorRef, setOrchestratorRef] = useState(
-    preset.claudemd.orchestratorRef
-  );
-
   useEffect(() => {
     listSkillsAction().then(setAvailableSkills);
     listAgentsAction().then(setAvailableAgents);
@@ -78,7 +74,7 @@ export function PresetDetail({ preset }: { preset: Preset }) {
             .map((s) => s.trim())
             .filter(Boolean),
         },
-        claudemd: { projectDescription, orchestratorRef },
+        claudemd: { projectDescription },
       });
       router.refresh();
       toast.success("Preset saved");
@@ -218,15 +214,6 @@ export function PresetDetail({ preset }: { preset: Preset }) {
               <Textarea
                 value={projectDescription}
                 onChange={(e) => setProjectDescription(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">
-                Orchestrator Reference
-              </label>
-              <Input
-                value={orchestratorRef}
-                onChange={(e) => setOrchestratorRef(e.target.value)}
               />
             </div>
           </CardContent>

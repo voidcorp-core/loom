@@ -10,6 +10,16 @@ tools:
   - Edit
   - Glob
   - Grep
+skills:
+  - nextjs-conventions
+  - tailwind-patterns
+  - shadcn-ui
+  - layered-architecture
+  - server-actions-patterns
+  - form-validation
+  - i18n-patterns
+  - react-query-patterns
+  - table-pagination
 model: claude-sonnet-4-6
 ---
 # Frontend Agent

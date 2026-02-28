@@ -1,14 +1,22 @@
 ---
 name: hero-copywriting
-description: "Guidelines for writing high-converting hero sections. Use when creating landing pages, marketing pages, or any page with a hero section."
-allowed-tools: "Read, Write, Edit"
+description: "Guidelines for writing high-converting hero sections with headlines, CTAs, and social proof. Use when creating landing pages, writing marketing copy, designing hero sections, or building any page that needs a compelling above-the-fold area."
 ---
 
 # Hero Section Copywriting
 
+## Critical Rules
+
+- **Lead with the outcome, not the feature** — what does the user GET?
+- **Headlines must be 8-12 words maximum** — short, punchy, outcome-focused.
+- **CTA must use action verbs** — "Start", "Get", "Try", "Launch", "Build".
+- **Always include social proof** — logos, metrics, ratings, or testimonials.
+- **Be specific over generic** — "Save 5 hours a week" beats "Save time".
+- **Speak to the reader directly** — use "you" and "your".
+
 ## Headline Rules
 
-- **Lead with the outcome**, not the feature. What does the user GET?
+- Lead with the outcome, not the feature. What does the user GET?
   - Bad: "AI-powered project management"
   - Good: "Ship projects 3x faster with your AI co-pilot"
 - Keep headlines to **8-12 words maximum**.
@@ -41,7 +49,7 @@ allowed-tools: "Read, Write, Edit"
 
 ## Visual Guidelines
 
-- Hero should occupy the full viewport height on desktop (`min-h-screen` or `min-h-[80vh]`).
+- Hero should occupy the full viewport height on desktop (`min-h-dvh` or `min-h-[80vh]`).
 - Text should be left-aligned or center-aligned. Never justify.
 - Maximum content width: `max-w-2xl` for centered, `max-w-xl` for left-aligned.
 - Generous whitespace. Don't crowd the hero.
