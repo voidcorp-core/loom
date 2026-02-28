@@ -15,7 +15,7 @@ export default async function PresetsPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Presets</h1>
           <p className="text-muted-foreground mt-1">
-            Project scaffolding presets combining agents, skills, and boilerplate
+            Project scaffolding presets combining agents, skills, and conventions
           </p>
         </div>
         <Button asChild>

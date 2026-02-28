@@ -1,9 +1,3 @@
-export interface PresetBoilerplate {
-  repo: string;
-  branch?: string;
-  shallow?: boolean;
-}
-
 export interface PresetConstitution {
   principles: string[];
   stack: string[];
@@ -16,21 +10,14 @@ export interface PresetClaudeMd {
   orchestratorRef: string;
 }
 
-export interface PresetSpecKit {
-  enabled: boolean;
-  aiFlag: string;
-}
-
 export interface Preset {
   slug: string;
   name: string;
   description: string;
-  boilerplate: PresetBoilerplate;
   agents: string[];
   skills: string[];
   constitution: PresetConstitution;
   claudemd: PresetClaudeMd;
-  specKit: PresetSpecKit;
   sha: string;
 }
 
@@ -46,12 +33,10 @@ export interface CreatePresetInput {
   slug: string;
   name: string;
   description: string;
-  boilerplate: PresetBoilerplate;
   agents: string[];
   skills: string[];
   constitution: PresetConstitution;
   claudemd: PresetClaudeMd;
-  specKit: PresetSpecKit;
 }
 
 export type UpdatePresetInput = Partial<Omit<CreatePresetInput, "slug">>;

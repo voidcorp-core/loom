@@ -23,8 +23,6 @@ export default function NewPresetPage() {
   const [slug, setSlug] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [repo, setRepo] = useState("");
-  const [branch, setBranch] = useState("");
   const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [principles, setPrinciples] = useState("");
@@ -32,7 +30,6 @@ export default function NewPresetPage() {
   const [conventions, setConventions] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const [orchestratorRef, setOrchestratorRef] = useState("");
-  const [specKitEnabled, setSpecKitEnabled] = useState(true);
 
   useEffect(() => {
     listSkillsAction().then(setAvailableSkills);
@@ -59,11 +56,6 @@ export default function NewPresetPage() {
           name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, ""),
         name,
         description,
-        boilerplate: {
-          repo,
-          ...(branch ? { branch } : {}),
-          shallow: true,
-        },
         agents: selectedAgents,
         skills: selectedSkills,
         constitution: {
@@ -85,10 +77,6 @@ export default function NewPresetPage() {
           orchestratorRef:
             orchestratorRef ||
             "Use the orchestrator agent as the main coordinator.",
-        },
-        specKit: {
-          enabled: specKitEnabled,
-          aiFlag: "claude",
         },
       });
       toast.success("Preset created");
@@ -141,31 +129,6 @@ export default function NewPresetPage() {
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="What this preset scaffolds"
                 required
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Boilerplate</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Git Repository *</label>
-              <Input
-                value={repo}
-                onChange={(e) => setRepo(e.target.value)}
-                placeholder="https://github.com/user/boilerplate.git"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Branch</label>
-              <Input
-                value={branch}
-                onChange={(e) => setBranch(e.target.value)}
-                placeholder="main (default)"
               />
             </div>
           </CardContent>
@@ -296,25 +259,8 @@ export default function NewPresetPage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Spec Kit</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={specKitEnabled}
-                onChange={(e) => setSpecKitEnabled(e.target.checked)}
-                className="rounded"
-              />
-              <span className="text-sm">Enable Spec Kit initialization</span>
-            </label>
-          </CardContent>
-        </Card>
-
         <div className="flex gap-3">
-          <Button type="submit" disabled={saving || !name || !description || !repo}>
+          <Button type="submit" disabled={saving || !name || !description}>
             {saving ? "Creating..." : "Create Preset"}
           </Button>
           <Button

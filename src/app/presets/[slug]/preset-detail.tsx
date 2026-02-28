@@ -25,8 +25,6 @@ export function PresetDetail({ preset }: { preset: Preset }) {
 
   const [name, setName] = useState(preset.name);
   const [description, setDescription] = useState(preset.description);
-  const [repo, setRepo] = useState(preset.boilerplate.repo);
-  const [branch, setBranch] = useState(preset.boilerplate.branch || "");
   const [selectedAgents, setSelectedAgents] = useState<string[]>(preset.agents);
   const [selectedSkills, setSelectedSkills] = useState<string[]>(preset.skills);
   const [principles, setPrinciples] = useState(
@@ -64,11 +62,6 @@ export function PresetDetail({ preset }: { preset: Preset }) {
       await updatePresetAction(preset.slug, {
         name,
         description,
-        boilerplate: {
-          repo,
-          ...(branch ? { branch } : {}),
-          shallow: true,
-        },
         agents: selectedAgents,
         skills: selectedSkills,
         constitution: {
@@ -132,25 +125,6 @@ export function PresetDetail({ preset }: { preset: Preset }) {
               <Textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Boilerplate</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Git Repository</label>
-              <Input value={repo} onChange={(e) => setRepo(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Branch</label>
-              <Input
-                value={branch}
-                onChange={(e) => setBranch(e.target.value)}
               />
             </div>
           </CardContent>
