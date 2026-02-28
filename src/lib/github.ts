@@ -50,6 +50,7 @@ export async function getFile(path: string): Promise<GitHubFile> {
 }
 
 export async function listDirectory(path: string): Promise<string[]> {
+  console.log("[github] listDirectory", path, "owner:", owner, "repo:", repo, "token set:", !!process.env.GITHUB_TOKEN);
   try {
     const { data } = await octokit().rest.repos.getContent({
       owner,
