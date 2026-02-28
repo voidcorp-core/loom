@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { createPresetAction } from "@/actions/preset.actions";
 import { listSkillsAction } from "@/actions/skill.actions";
 import { listAgentsAction } from "@/actions/agent.actions";
+import { toast } from "sonner";
 import type { SkillSummary, AgentSummary } from "@/types";
 
 export default function NewPresetPage() {
@@ -90,9 +91,10 @@ export default function NewPresetPage() {
           aiFlag: "claude",
         },
       });
+      toast.success("Preset created");
       router.push("/presets");
     } catch (err) {
-      alert(`Error: ${err}`);
+      toast.error(`${err}`);
     } finally {
       setSaving(false);
     }

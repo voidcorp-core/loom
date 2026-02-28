@@ -14,6 +14,7 @@ import {
 } from "@/actions/preset.actions";
 import { listSkillsAction } from "@/actions/skill.actions";
 import { listAgentsAction } from "@/actions/agent.actions";
+import { toast } from "sonner";
 import type { Preset, SkillSummary, AgentSummary } from "@/types";
 
 export function PresetDetail({ preset }: { preset: Preset }) {
@@ -87,8 +88,9 @@ export function PresetDetail({ preset }: { preset: Preset }) {
         claudemd: { projectDescription, orchestratorRef },
       });
       router.refresh();
+      toast.success("Preset saved");
     } catch (err) {
-      alert(`Error: ${err}`);
+      toast.error(`${err}`);
     } finally {
       setSaving(false);
     }

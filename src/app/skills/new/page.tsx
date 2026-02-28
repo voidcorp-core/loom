@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MarkdownEditor } from "@/components/editor/markdown-editor";
 import { createSkillAction } from "@/actions/skill.actions";
+import { toast } from "sonner";
 
 export default function NewSkillPage() {
   const router = useRouter();
@@ -31,9 +32,10 @@ export default function NewSkillPage() {
         },
         content,
       });
+      toast.success("Skill created");
       router.push("/skills");
     } catch (err) {
-      alert(`Error: ${err}`);
+      toast.error(`${err}`);
     } finally {
       setSaving(false);
     }

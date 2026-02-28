@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MarkdownEditor } from "@/components/editor/markdown-editor";
 import { createAgentAction } from "@/actions/agent.actions";
+import { toast } from "sonner";
 
 export default function NewAgentPage() {
   const router = useRouter();
@@ -43,9 +44,10 @@ export default function NewAgentPage() {
         },
         content,
       });
+      toast.success("Agent created");
       router.push("/agents");
     } catch (err) {
-      alert(`Error: ${err}`);
+      toast.error(`${err}`);
     } finally {
       setSaving(false);
     }

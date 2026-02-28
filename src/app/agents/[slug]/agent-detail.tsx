@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { MarkdownEditor } from "@/components/editor/markdown-editor";
 import { FileTree } from "@/components/editor/file-tree";
 import { updateAgentAction, deleteAgentAction } from "@/actions/agent.actions";
+import { toast } from "sonner";
 import type { Agent } from "@/types";
 
 export function AgentDetail({ agent }: { agent: Agent }) {
@@ -45,8 +46,9 @@ export function AgentDetail({ agent }: { agent: Agent }) {
         content,
       });
       router.refresh();
+      toast.success("Agent saved");
     } catch (err) {
-      alert(`Error: ${err}`);
+      toast.error(`${err}`);
     } finally {
       setSaving(false);
     }

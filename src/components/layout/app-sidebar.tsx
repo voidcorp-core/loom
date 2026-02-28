@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import {
   LayoutDashboard,
   Sparkles,
   Bot,
   Layers,
-  Settings,
+  LogOut,
 } from "lucide-react";
 import {
   Sidebar,
@@ -21,6 +22,8 @@ import {
   SidebarMenuItem,
   SidebarFooter,
 } from "@/components/ui/sidebar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 
 const navItems = [
   { title: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -31,6 +34,7 @@ const navItems = [
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   return (
     <Sidebar>
@@ -70,9 +74,29 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="px-4 py-3">
-        <p className="text-xs text-muted-foreground">
-          Loom v1.0.0
-        </p>
+        {session?.user ? (
+          <div className="flex items-center gap-2">
+            <Avatar className="h-7 w-7">
+              <AvatarImage src={session.user.image ?? undefined} />
+              <AvatarFallback className="text-xs">
+                {session.user.name?.[0]?.toUpperCase() ?? "U"}
+              </AvatarFallback>
+            </Avatar>
+            <span className="flex-1 truncate text-sm font-medium">
+              {session.user.name}
+            </span>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              onClick={() => signOut()}
+            >
+              <LogOut className="h-4 w-4" />
+            </Button>
+          </div>
+        ) : (
+          <p className="text-xs text-muted-foreground">Loom v1.0.0</p>
+        )}
       </SidebarFooter>
     </Sidebar>
   );

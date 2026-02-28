@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { MarkdownEditor } from "@/components/editor/markdown-editor";
 import { FileTree } from "@/components/editor/file-tree";
 import { updateSkillAction, deleteSkillAction } from "@/actions/skill.actions";
+import { toast } from "sonner";
 import type { Skill } from "@/types";
 
 export function SkillDetail({ skill }: { skill: Skill }) {
@@ -35,8 +36,9 @@ export function SkillDetail({ skill }: { skill: Skill }) {
         content,
       });
       router.refresh();
+      toast.success("Skill saved");
     } catch (err) {
-      alert(`Error: ${err}`);
+      toast.error(`${err}`);
     } finally {
       setSaving(false);
     }
