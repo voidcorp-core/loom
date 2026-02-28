@@ -1,4 +1,4 @@
-import type { Preset } from "./github.js";
+import type { Preset } from "./library.js";
 
 interface AgentInfo {
   slug: string;
