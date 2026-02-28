@@ -32,7 +32,6 @@ export interface Preset {
   slug: string;
   name: string;
   description: string;
-  boilerplate: { repo: string; branch?: string; shallow?: boolean };
   agents: string[];
   skills: string[];
   constitution: {
@@ -45,7 +44,6 @@ export interface Preset {
     projectDescription: string;
     orchestratorRef: string;
   };
-  specKit: { enabled: boolean; aiFlag: string };
 }
 
 function listSubDirs(dir: string): string[] {

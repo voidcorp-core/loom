@@ -1,0 +1,34 @@
+name: CLI Tool
+description: Outil CLI Node.js avec parsing d'arguments, UX terminal soignée et distribution npm.
+agents:
+  - orchestrator
+  - backend
+  - tests
+  - review-qa
+skills:
+  - cli-development
+constitution:
+  principles:
+    - Unix philosophy — do one thing well, compose with other tools
+    - Fail loudly — clear error messages with actionable suggestions
+    - Zero-config defaults — sensible defaults, override with flags
+    - Scriptable — support stdin/stdout piping and non-interactive mode
+  stack:
+    - TypeScript 5 (strict)
+    - Node.js 20+
+    - Commander.js (CLI framework)
+    - tsup (bundling)
+  conventions:
+    - Use Commander.js for argument parsing and subcommands
+    - Exit with proper codes — 0 for success, 1 for errors, 2 for usage errors
+    - Support --json flag for machine-readable output
+    - Use stderr for progress/logging, stdout for actual output
+    - Include a --version and --help flag on every command
+claudemd:
+  projectDescription: >
+    This is a CLI tool scaffolded with Loom. It uses Commander.js for argument parsing and tsup
+    for bundling. The orchestrator delegates implementation to the backend agent and testing to
+    the tests agent.
+  orchestratorRef: >
+    The orchestrator agent (.claude/agents/orchestrator.md) is the main entry point. Always start
+    by delegating to the orchestrator, which will route tasks to the appropriate specialized agent.

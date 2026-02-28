@@ -12,6 +12,8 @@ delegates-to:
   - database
   - tests
   - review-qa
+  - security
+  - performance
 model: claude-opus-4-6
 ---
 
@@ -35,7 +37,9 @@ You are the central coordinator for the Loom project. Your job is to understand 
 - **ux-ui**: UI component design, design tokens, color palettes, spacing systems, accessibility audits, and responsive design patterns.
 - **database**: Schema design, migrations, seed data, query optimization, and ORM configuration.
 - **tests**: Unit tests, integration tests, end-to-end tests, and test infrastructure setup.
-- **review-qa**: Code review, security analysis, performance audits, and best-practice enforcement.
+- **review-qa**: Code review, best-practice enforcement, and comprehensive quality audits.
+- **security**: Security audits, vulnerability assessments, OWASP compliance, auth hardening, dependency scanning, and RLS policy review.
+- **performance**: Performance optimization, Core Web Vitals audits, bundle analysis, Lighthouse runs, query optimization, and rendering profiling.
 
 ## Workflow Guidelines
 

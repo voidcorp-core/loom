@@ -1,10 +1,6 @@
 name: SaaS Default
 description: Standard SaaS project preset with full agent team, Next.js conventions, and Tailwind patterns. Includes
   orchestrator-driven multi-agent workflow.
-boilerplate:
-  repo: https://github.com/vercel/next.js.git
-  branch: canary
-  shallow: true
 agents:
   - orchestrator
   - frontend
@@ -20,6 +16,10 @@ skills:
   - nextjs-conventions
   - tailwind-patterns
   - hero-copywriting
+  - supabase-patterns
+  - shadcn-ui
+  - api-design
+  - ui-ux-guidelines
 constitution:
   principles:
     - Ship fast, iterate often — prefer working software over perfect plans
@@ -48,6 +48,3 @@ claudemd:
   orchestratorRef: >
     The orchestrator agent (.claude/agents/orchestrator.md) is the main entry point. Always start by delegating to the
     orchestrator, which will route tasks to the appropriate specialized agent.
-specKit:
-  enabled: true
-  aiFlag: claude
