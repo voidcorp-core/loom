@@ -7,6 +7,8 @@ import { listSkills } from "@/services/skill.service";
 import { listAgents } from "@/services/agent.service";
 import { listPresets } from "@/services/preset.service";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const [stats, skills, agents, presets] = await Promise.all([
     getLibraryStats(),

@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { SkillCard } from "@/components/library/skill-card";
 import { listSkills } from "@/services/skill.service";
 
+export const dynamic = "force-dynamic";
+
 export default async function SkillsPage() {
   const skills = await listSkills();
 

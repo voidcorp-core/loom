@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { PresetCard } from "@/components/library/preset-card";
 import { listPresets } from "@/services/preset.service";
 
+export const dynamic = "force-dynamic";
+
 export default async function PresetsPage() {
   const presets = await listPresets();
 

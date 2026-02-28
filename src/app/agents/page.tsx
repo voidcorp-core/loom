@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { AgentCard } from "@/components/library/agent-card";
 import { listAgents } from "@/services/agent.service";
 
+export const dynamic = "force-dynamic";
+
 export default async function AgentsPage() {
   const agents = await listAgents();
 
