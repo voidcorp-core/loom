@@ -1,4 +1,4 @@
-name: SaaS Default
+name: SaaS Full
 description: Standard SaaS project preset with full agent team, Next.js conventions, and Tailwind patterns. Includes
   orchestrator-driven multi-agent workflow.
 agents:
@@ -20,6 +20,8 @@ skills:
   - shadcn-ui
   - api-design
   - ui-ux-guidelines
+  - stripe-integration
+  - seo-optimization
 constitution:
   principles:
     - Ship fast, iterate often — prefer working software over perfect plans
