@@ -20,9 +20,7 @@ import {
 const AGENT_FILE = "AGENT.md";
 
 export async function listAgents(): Promise<AgentSummary[]> {
-  console.log("[listAgents] agentsPath:", agentsPath());
   const dirs = await listDirectory(agentsPath());
-  console.log("[listAgents] dirs:", dirs);
   const summaries: AgentSummary[] = [];
 
   for (const dir of dirs) {
@@ -37,8 +35,8 @@ export async function listAgents(): Promise<AgentSummary[]> {
         role: data.role || "general",
         color: data.color,
       });
-    } catch (err) {
-      console.error("[listAgents] error for", dir, err);
+    } catch {
+      // skip malformed or missing entries
     }
   }
 
