@@ -1,0 +1,51 @@
+{
+  "name": "@folpe/loom",
+  "version": "0.1.0",
+  "description": "CLI to scaffold Claude Code projects with curated agents, skills, and presets",
+  "type": "module",
+  "license": "MIT",
+  "author": "folpe",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/voidcorp-core/loom",
+    "directory": "cli"
+  },
+  "homepage": "https://github.com/voidcorp-core/loom/tree/main/cli#readme",
+  "keywords": [
+    "claude",
+    "claude-code",
+    "ai-agents",
+    "cli",
+    "scaffolding",
+    "presets"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "loom": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "data"
+  ],
+  "scripts": {
+    "prebuild": "node scripts/sync-library.js",
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "commander": "^13.1.0",
+    "gray-matter": "^4.0.3",
+    "picocolors": "^1.1.1",
+    "yaml": "^2.8.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "tsup": "^8.4.0",
+    "typescript": "^5"
+  }
+}
