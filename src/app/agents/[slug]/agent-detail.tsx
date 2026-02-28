@@ -152,7 +152,7 @@ export function AgentDetail({ agent }: { agent: Agent }) {
         </Card>
 
         <div className="flex gap-3">
-          <Button onClick={handleSave} disabled={saving}>
+          <Button type="button" onClick={handleSave} disabled={saving}>
             {saving ? "Saving..." : "Save Changes"}
           </Button>
           <Button variant="outline" onClick={() => router.push("/agents")}>
