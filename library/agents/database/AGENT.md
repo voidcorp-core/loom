@@ -11,7 +11,7 @@ tools:
 skills:
   - supabase-patterns
   - drizzle-patterns
-model: claude-sonnet-4-6
+model: inherit
 ---
 
 # Database Agent

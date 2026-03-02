@@ -7,7 +7,7 @@ tools:
   - Read
   - Glob
   - Grep
-model: claude-sonnet-4-6
+model: inherit
 ---
 
 # Review & QA Agent

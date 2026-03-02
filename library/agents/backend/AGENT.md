@@ -22,7 +22,7 @@ skills:
   - env-validation
   - resend-email
   - better-auth-patterns
-model: claude-sonnet-4-6
+model: inherit
 ---
 
 # Backend Agent

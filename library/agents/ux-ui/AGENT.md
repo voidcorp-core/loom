@@ -14,7 +14,7 @@ skills:
   - shadcn-ui
   - tailwind-patterns
   - table-pagination
-model: claude-sonnet-4-6
+model: inherit
 ---
 
 # UX/UI Agent

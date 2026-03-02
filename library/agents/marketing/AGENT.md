@@ -10,7 +10,7 @@ tools:
 skills:
   - hero-copywriting
   - seo-optimization
-model: claude-sonnet-4-6
+model: inherit
 ---
 
 # Marketing Agent

@@ -12,7 +12,7 @@ tools:
 skills:
   - auth-rbac
   - better-auth-patterns
-model: claude-sonnet-4-6
+model: inherit
 ---
 
 # Security Agent

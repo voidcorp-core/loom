@@ -20,7 +20,7 @@ skills:
   - i18n-patterns
   - react-query-patterns
   - table-pagination
-model: claude-sonnet-4-6
+model: inherit
 ---
 # Frontend Agent
 

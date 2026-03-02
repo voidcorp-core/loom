@@ -12,7 +12,7 @@ tools:
   - Grep
 skills:
   - testing-patterns
-model: claude-sonnet-4-6
+model: inherit
 ---
 
 # Tests Agent

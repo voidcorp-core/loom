@@ -4,7 +4,7 @@ description: Main coordinator that analyzes tasks and delegates to specialized a
 role: orchestrator
 color: "#8B5CF6"
 tools: []
-model: claude-opus-4-6
+model: inherit
 ---
 
 # Orchestrator Agent
