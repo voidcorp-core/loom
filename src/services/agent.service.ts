@@ -1,60 +1,56 @@
-import { agentsPath } from "./library.service";
-import { getFile, listDirectory, getTree } from "../lib/github";
+import { eq, isNull, and, asc } from "drizzle-orm";
+import { db } from "../db";
+import { resources } from "../db/schema";
 import { parseFrontmatter } from "../lib/frontmatter";
 import { NotFoundError } from "../lib/errors";
 import type { Agent, AgentSummary, AgentFrontmatter } from "../types";
 
-const AGENT_FILE = "AGENT.md";
-
 export async function listAgents(): Promise<AgentSummary[]> {
-  const dirs = await listDirectory(agentsPath());
-  const summaries: AgentSummary[] = [];
+  const rows = await db
+    .select()
+    .from(resources)
+    .where(and(eq(resources.type, "agent"), isNull(resources.ownerId)))
+    .orderBy(asc(resources.title));
 
-  for (const dir of dirs) {
-    const filePath = agentsPath(dir, AGENT_FILE);
-    try {
-      const file = await getFile(filePath);
-      const { data } = parseFrontmatter<AgentFrontmatter>(file.content);
-      summaries.push({
-        slug: dir,
-        name: data.name || dir,
-        description: data.description || "",
-        role: data.role || "general",
-        color: data.color,
-      });
-    } catch {
-      // skip malformed or missing entries
-    }
-  }
-
-  return summaries.sort((a, b) => a.name.localeCompare(b.name));
+  return rows.map((row) => {
+    const meta = row.metadata as Record<string, unknown> | null;
+    return {
+      slug: row.slug,
+      name: (meta?.name as string) || row.title,
+      description: (meta?.description as string) || "",
+      role: (meta?.role as string) || "general",
+      color: meta?.color as string | undefined,
+    };
+  });
 }
 
 export async function getAgent(slug: string): Promise<Agent> {
-  const filePath = agentsPath(slug, AGENT_FILE);
-  const dirPath = agentsPath(slug);
+  const row = await db
+    .select()
+    .from(resources)
+    .where(
+      and(
+        eq(resources.type, "agent"),
+        eq(resources.slug, slug),
+        isNull(resources.ownerId)
+      )
+    )
+    .then((rows) => rows[0]);
 
-  let file;
-  try {
-    file = await getFile(filePath);
-  } catch (error) {
-    if (error instanceof NotFoundError) {
-      throw new NotFoundError("Agent", slug);
-    }
-    throw error;
+  if (!row) {
+    throw new NotFoundError("Agent", slug);
   }
 
-  const { data, content } = parseFrontmatter<AgentFrontmatter>(file.content);
-  const files = await getTree(dirPath);
+  const { data, content } = parseFrontmatter<AgentFrontmatter>(row.content);
 
   return {
     slug,
     frontmatter: data,
     content,
-    rawContent: file.content,
-    path: filePath,
-    directoryPath: dirPath,
-    files,
-    sha: file.sha,
+    rawContent: row.content,
+    path: `library/agents/${slug}/AGENT.md`,
+    directoryPath: `library/agents/${slug}`,
+    files: [],
+    sha: row.id,
   };
 }
