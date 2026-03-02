@@ -96,5 +96,6 @@ export async function getSkillForUser(
     sha: row.id,
     resourceId: row.id,
     isForked: row.isForked,
+    isPublic: row.isPublic,
   };
 }

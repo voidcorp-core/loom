@@ -20,6 +20,7 @@ export interface Preset {
   rawContent?: string;
   resourceId?: string;
   isForked?: boolean;
+  isPublic?: boolean;
 }
 
 export interface PresetSummary {

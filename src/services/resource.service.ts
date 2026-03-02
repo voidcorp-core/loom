@@ -1,8 +1,8 @@
 "use server";
 
-import { eq, isNull, and, asc } from "drizzle-orm";
+import { eq, isNull, and, asc, desc, isNotNull, ilike, sql } from "drizzle-orm";
 import { db } from "../db";
-import { resources } from "../db/schema";
+import { resources, users } from "../db/schema";
 
 type ResourceType = "agent" | "skill" | "preset";
 
@@ -247,4 +247,186 @@ export async function updateOwnResource(
     .returning();
 
   return updated as ResourceRow;
+}
+
+// ---------------------------------------------------------------------------
+// Marketplace
+// ---------------------------------------------------------------------------
+
+export interface MarketplaceItem {
+  id: string;
+  type: string;
+  slug: string;
+  title: string;
+  description: string;
+  authorName: string | null;
+  authorImage: string | null;
+  installCount: number;
+  publishedAt: Date | null;
+}
+
+export interface MarketplaceFilters {
+  type?: ResourceType;
+  search?: string;
+  sort?: "popular" | "recent";
+}
+
+/**
+ * List public marketplace resources with optional filters.
+ */
+export async function listMarketplaceResources(
+  filters: MarketplaceFilters = {}
+): Promise<MarketplaceItem[]> {
+  const conditions = [
+    eq(resources.isPublic, true),
+    isNotNull(resources.ownerId),
+  ];
+
+  if (filters.type) {
+    conditions.push(eq(resources.type, filters.type));
+  }
+
+  if (filters.search) {
+    conditions.push(ilike(resources.title, `%${filters.search}%`));
+  }
+
+  const orderBy =
+    filters.sort === "recent"
+      ? desc(resources.publishedAt)
+      : desc(resources.installCount);
+
+  const rows = await db
+    .select({
+      id: resources.id,
+      type: resources.type,
+      slug: resources.slug,
+      title: resources.title,
+      metadata: resources.metadata,
+      installCount: resources.installCount,
+      publishedAt: resources.publishedAt,
+      authorName: users.name,
+      authorImage: users.image,
+    })
+    .from(resources)
+    .leftJoin(users, eq(resources.ownerId, users.id))
+    .where(and(...conditions))
+    .orderBy(orderBy);
+
+  return rows.map((row) => {
+    const meta = row.metadata as Record<string, unknown> | null;
+    return {
+      id: row.id,
+      type: row.type,
+      slug: row.slug,
+      title: row.title,
+      description: (meta?.description as string) || "",
+      authorName: row.authorName,
+      authorImage: row.authorImage,
+      installCount: row.installCount,
+      publishedAt: row.publishedAt,
+    };
+  });
+}
+
+/**
+ * Publish a user's resource to the marketplace.
+ */
+export async function publishResource(
+  resourceId: string,
+  userId: string
+): Promise<void> {
+  const row = await db
+    .select()
+    .from(resources)
+    .where(and(eq(resources.id, resourceId), eq(resources.ownerId, userId)))
+    .then((rows) => rows[0]);
+
+  if (!row) {
+    throw new Error("Resource not found or not owned by you");
+  }
+
+  await db
+    .update(resources)
+    .set({ isPublic: true, publishedAt: new Date() })
+    .where(eq(resources.id, resourceId));
+}
+
+/**
+ * Unpublish a user's resource from the marketplace.
+ */
+export async function unpublishResource(
+  resourceId: string,
+  userId: string
+): Promise<void> {
+  const row = await db
+    .select()
+    .from(resources)
+    .where(and(eq(resources.id, resourceId), eq(resources.ownerId, userId)))
+    .then((rows) => rows[0]);
+
+  if (!row) {
+    throw new Error("Resource not found or not owned by you");
+  }
+
+  await db
+    .update(resources)
+    .set({ isPublic: false, publishedAt: null })
+    .where(eq(resources.id, resourceId));
+}
+
+/**
+ * Install a marketplace resource: creates a copy for the user
+ * and increments installCount on the source.
+ */
+export async function installResource(
+  resourceId: string,
+  userId: string
+): Promise<ResourceRow> {
+  const source = await db
+    .select()
+    .from(resources)
+    .where(and(eq(resources.id, resourceId), eq(resources.isPublic, true)))
+    .then((rows) => rows[0]);
+
+  if (!source) {
+    throw new Error("Resource not found or not public");
+  }
+
+  // Check if user already has this slug+type
+  const existing = await db
+    .select()
+    .from(resources)
+    .where(
+      and(
+        eq(resources.type, source.type as ResourceType),
+        eq(resources.slug, source.slug),
+        eq(resources.ownerId, userId)
+      )
+    )
+    .then((rows) => rows[0]);
+
+  if (existing) {
+    throw new Error("You already have a resource with this slug");
+  }
+
+  const [copy] = await db
+    .insert(resources)
+    .values({
+      type: source.type as ResourceType,
+      slug: source.slug,
+      title: source.title,
+      content: source.content,
+      metadata: source.metadata as Record<string, unknown> | null,
+      ownerId: userId,
+      sourceId: source.id,
+      isPublic: false,
+    })
+    .returning();
+
+  await db
+    .update(resources)
+    .set({ installCount: sql`${resources.installCount} + 1` })
+    .where(eq(resources.id, resourceId));
+
+  return copy as ResourceRow;
 }

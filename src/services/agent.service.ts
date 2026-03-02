@@ -100,5 +100,6 @@ export async function getAgentForUser(
     sha: row.id,
     resourceId: row.id,
     isForked: row.isForked,
+    isPublic: row.isPublic,
   };
 }

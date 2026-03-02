@@ -22,6 +22,7 @@ export interface Agent {
   sha: string;
   resourceId?: string;
   isForked?: boolean;
+  isPublic?: boolean;
 }
 
 export interface AgentSummary {

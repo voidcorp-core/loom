@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FileTree } from "@/components/editor/file-tree";
 import { ResourceEditButton } from "@/components/library/resource-edit-button";
+import { PublishToggle } from "@/components/library/publish-toggle";
 import type { Agent } from "@/types";
 
 interface AgentDetailProps {
@@ -28,14 +29,22 @@ export function AgentDetail({ agent, isAuthenticated }: AgentDetailProps) {
           </div>
         </div>
         {isAuthenticated && agent.resourceId && (
-          <ResourceEditButton
-            resourceId={agent.resourceId}
-            isForked={!!agent.isForked}
-            type="agent"
-            slug={agent.slug}
-            title={agent.frontmatter.name}
-            content={agent.rawContent}
-          />
+          <div className="flex items-center gap-2">
+            {agent.isForked && (
+              <PublishToggle
+                resourceId={agent.resourceId}
+                isPublic={!!agent.isPublic}
+              />
+            )}
+            <ResourceEditButton
+              resourceId={agent.resourceId}
+              isForked={!!agent.isForked}
+              type="agent"
+              slug={agent.slug}
+              title={agent.frontmatter.name}
+              content={agent.rawContent}
+            />
+          </div>
         )}
       </div>
 

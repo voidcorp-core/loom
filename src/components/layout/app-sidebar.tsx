@@ -9,6 +9,7 @@ import {
   Sparkles,
   Bot,
   Layers,
+  Store,
   LogOut,
   LogIn,
 } from "lucide-react";
@@ -32,6 +33,7 @@ const navItems = [
   { title: "Skills", href: "/skills", icon: Sparkles },
   { title: "Agents", href: "/agents", icon: Bot },
   { title: "Presets", href: "/presets", icon: Layers },
+  { title: "Marketplace", href: "/marketplace", icon: Store },
 ];
 
 export function AppSidebar() {

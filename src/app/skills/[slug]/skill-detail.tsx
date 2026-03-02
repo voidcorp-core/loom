@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FileTree } from "@/components/editor/file-tree";
 import { ResourceEditButton } from "@/components/library/resource-edit-button";
+import { PublishToggle } from "@/components/library/publish-toggle";
 import type { Skill } from "@/types";
 
 interface SkillDetailProps {
@@ -25,14 +26,22 @@ export function SkillDetail({ skill, isAuthenticated }: SkillDetailProps) {
           </div>
         </div>
         {isAuthenticated && skill.resourceId && (
-          <ResourceEditButton
-            resourceId={skill.resourceId}
-            isForked={!!skill.isForked}
-            type="skill"
-            slug={skill.slug}
-            title={skill.frontmatter.name}
-            content={skill.rawContent}
-          />
+          <div className="flex items-center gap-2">
+            {skill.isForked && (
+              <PublishToggle
+                resourceId={skill.resourceId}
+                isPublic={!!skill.isPublic}
+              />
+            )}
+            <ResourceEditButton
+              resourceId={skill.resourceId}
+              isForked={!!skill.isForked}
+              type="skill"
+              slug={skill.slug}
+              title={skill.frontmatter.name}
+              content={skill.rawContent}
+            />
+          </div>
         )}
       </div>
 

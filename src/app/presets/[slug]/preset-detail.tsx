@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ResourceEditButton } from "@/components/library/resource-edit-button";
+import { PublishToggle } from "@/components/library/publish-toggle";
 import type { Preset } from "@/types";
 
 interface PresetDetailProps {
@@ -24,14 +25,22 @@ export function PresetDetail({ preset, isAuthenticated }: PresetDetailProps) {
           </div>
         </div>
         {isAuthenticated && preset.resourceId && (
-          <ResourceEditButton
-            resourceId={preset.resourceId}
-            isForked={!!preset.isForked}
-            type="preset"
-            slug={preset.slug}
-            title={preset.name}
-            content={preset.rawContent ?? ""}
-          />
+          <div className="flex items-center gap-2">
+            {preset.isForked && (
+              <PublishToggle
+                resourceId={preset.resourceId}
+                isPublic={!!preset.isPublic}
+              />
+            )}
+            <ResourceEditButton
+              resourceId={preset.resourceId}
+              isForked={!!preset.isForked}
+              type="preset"
+              slug={preset.slug}
+              title={preset.name}
+              content={preset.rawContent ?? ""}
+            />
+          </div>
         )}
       </div>
 

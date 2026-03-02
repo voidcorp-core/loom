@@ -85,5 +85,6 @@ export async function getPresetForUser(
     rawContent: row.content,
     resourceId: row.id,
     isForked: row.isForked,
+    isPublic: row.isPublic,
   };
 }

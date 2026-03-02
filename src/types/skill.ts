@@ -18,6 +18,7 @@ export interface Skill {
   sha: string;
   resourceId?: string;
   isForked?: boolean;
+  isPublic?: boolean;
 }
 
 export interface SkillSummary {
