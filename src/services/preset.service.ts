@@ -3,6 +3,10 @@ import { db } from "../db";
 import { resources } from "../db/schema";
 import { parseYaml } from "../lib/yaml";
 import { NotFoundError } from "../lib/errors";
+import {
+  getResourceForUser,
+  listResourcesForUser,
+} from "./resource.service";
 import type { Preset, PresetSummary } from "../types";
 
 export async function listPresets(): Promise<PresetSummary[]> {
@@ -20,6 +24,24 @@ export async function listPresets(): Promise<PresetSummary[]> {
       description: (meta?.description as string) || "",
       agentCount: (meta?.agentCount as number) || 0,
       skillCount: (meta?.skillCount as number) || 0,
+    };
+  });
+}
+
+export async function listPresetsForUser(
+  userId: string | null
+): Promise<PresetSummary[]> {
+  const rows = await listResourcesForUser("preset", userId);
+  return rows.map((row) => {
+    const meta = row.metadata;
+    return {
+      slug: row.slug,
+      name: (meta?.name as string) || row.title,
+      description: (meta?.description as string) || "",
+      agentCount: (meta?.agentCount as number) || 0,
+      skillCount: (meta?.skillCount as number) || 0,
+      isForked: row.isForked,
+      resourceId: row.id,
     };
   });
 }
@@ -43,4 +65,25 @@ export async function getPreset(slug: string): Promise<Preset> {
 
   const data = parseYaml<Omit<Preset, "slug" | "sha">>(row.content);
   return { slug, ...data, sha: row.id };
+}
+
+export async function getPresetForUser(
+  slug: string,
+  userId: string | null
+): Promise<Preset> {
+  const row = await getResourceForUser("preset", slug, userId);
+
+  if (!row) {
+    throw new NotFoundError("Preset", slug);
+  }
+
+  const data = parseYaml<Omit<Preset, "slug" | "sha">>(row.content);
+  return {
+    slug,
+    ...data,
+    sha: row.id,
+    rawContent: row.content,
+    resourceId: row.id,
+    isForked: row.isForked,
+  };
 }

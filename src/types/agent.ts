@@ -20,6 +20,8 @@ export interface Agent {
   directoryPath: string;
   files: FileTreeNode[];
   sha: string;
+  resourceId?: string;
+  isForked?: boolean;
 }
 
 export interface AgentSummary {
@@ -28,5 +30,7 @@ export interface AgentSummary {
   description: string;
   role: string;
   color?: string;
+  isForked?: boolean;
+  resourceId?: string;
 }
 

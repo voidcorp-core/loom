@@ -2,16 +2,37 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ResourceEditButton } from "@/components/library/resource-edit-button";
 import type { Preset } from "@/types";
 
-export function PresetDetail({ preset }: { preset: Preset }) {
+interface PresetDetailProps {
+  preset: Preset;
+  isAuthenticated?: boolean;
+}
+
+export function PresetDetail({ preset, isAuthenticated }: PresetDetailProps) {
   return (
     <div className="max-w-3xl space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">{preset.name}</h1>
-        <Badge variant="secondary" className="mt-1">
-          {preset.slug}
-        </Badge>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">{preset.name}</h1>
+          <div className="flex items-center gap-2 mt-1">
+            <Badge variant="secondary">{preset.slug}</Badge>
+            {preset.isForked && (
+              <Badge variant="outline">Your fork</Badge>
+            )}
+          </div>
+        </div>
+        {isAuthenticated && preset.resourceId && (
+          <ResourceEditButton
+            resourceId={preset.resourceId}
+            isForked={!!preset.isForked}
+            type="preset"
+            slug={preset.slug}
+            title={preset.name}
+            content={preset.rawContent ?? ""}
+          />
+        )}
       </div>
 
       <div className="space-y-6">

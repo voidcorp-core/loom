@@ -3,9 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FileTree } from "@/components/editor/file-tree";
+import { ResourceEditButton } from "@/components/library/resource-edit-button";
 import type { Agent } from "@/types";
 
-export function AgentDetail({ agent }: { agent: Agent }) {
+interface AgentDetailProps {
+  agent: Agent;
+  isAuthenticated?: boolean;
+}
+
+export function AgentDetail({ agent, isAuthenticated }: AgentDetailProps) {
   return (
     <div className="max-w-3xl space-y-6">
       <div className="flex items-center justify-between">
@@ -16,8 +22,21 @@ export function AgentDetail({ agent }: { agent: Agent }) {
           <div className="flex items-center gap-2 mt-1">
             <Badge variant="secondary">{agent.slug}</Badge>
             <Badge>{agent.frontmatter.role}</Badge>
+            {agent.isForked && (
+              <Badge variant="outline">Your fork</Badge>
+            )}
           </div>
         </div>
+        {isAuthenticated && agent.resourceId && (
+          <ResourceEditButton
+            resourceId={agent.resourceId}
+            isForked={!!agent.isForked}
+            type="agent"
+            slug={agent.slug}
+            title={agent.frontmatter.name}
+            content={agent.rawContent}
+          />
+        )}
       </div>
 
       <div className="space-y-6">

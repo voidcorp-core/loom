@@ -12,6 +12,9 @@ export function AgentCard({ agent }: { agent: AgentSummary }) {
           <div className="flex items-center gap-2">
             <Bot className="h-4 w-4 text-muted-foreground" />
             <CardTitle className="text-base">{agent.name}</CardTitle>
+            {agent.isForked && (
+              <Badge variant="outline" className="text-xs">Forked</Badge>
+            )}
             <Badge variant="secondary" className="ml-auto text-xs">
               {agent.role}
             </Badge>

@@ -12,6 +12,9 @@ export function PresetCard({ preset }: { preset: PresetSummary }) {
           <div className="flex items-center gap-2">
             <Layers className="h-4 w-4 text-muted-foreground" />
             <CardTitle className="text-base">{preset.name}</CardTitle>
+            {preset.isForked && (
+              <Badge variant="outline" className="text-xs">Forked</Badge>
+            )}
           </div>
         </CardHeader>
         <CardContent>

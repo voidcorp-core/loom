@@ -17,6 +17,9 @@ export interface Preset {
   constitution: PresetConstitution;
   context: PresetContext;
   sha: string;
+  rawContent?: string;
+  resourceId?: string;
+  isForked?: boolean;
 }
 
 export interface PresetSummary {
@@ -25,5 +28,7 @@ export interface PresetSummary {
   description: string;
   agentCount: number;
   skillCount: number;
+  isForked?: boolean;
+  resourceId?: string;
 }
 

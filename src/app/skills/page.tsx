@@ -1,10 +1,12 @@
 import { SkillCard } from "@/components/library/skill-card";
-import { listSkills } from "@/services/skill.service";
+import { getCurrentUser } from "@/lib/current-user";
+import { listSkillsForUser } from "@/services/skill.service";
 
 export const dynamic = "force-dynamic";
 
 export default async function SkillsPage() {
-  const skills = await listSkills();
+  const user = await getCurrentUser();
+  const skills = await listSkillsForUser(user?.id ?? null);
 
   return (
     <div className="space-y-6">

@@ -1,10 +1,12 @@
 import { AgentCard } from "@/components/library/agent-card";
-import { listAgents } from "@/services/agent.service";
+import { getCurrentUser } from "@/lib/current-user";
+import { listAgentsForUser } from "@/services/agent.service";
 
 export const dynamic = "force-dynamic";
 
 export default async function AgentsPage() {
-  const agents = await listAgents();
+  const user = await getCurrentUser();
+  const agents = await listAgentsForUser(user?.id ?? null);
 
   return (
     <div className="space-y-6">

@@ -1,10 +1,12 @@
 import { PresetCard } from "@/components/library/preset-card";
-import { listPresets } from "@/services/preset.service";
+import { getCurrentUser } from "@/lib/current-user";
+import { listPresetsForUser } from "@/services/preset.service";
 
 export const dynamic = "force-dynamic";
 
 export default async function PresetsPage() {
-  const presets = await listPresets();
+  const user = await getCurrentUser();
+  const presets = await listPresetsForUser(user?.id ?? null);
 
   return (
     <div className="space-y-6">

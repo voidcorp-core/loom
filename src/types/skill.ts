@@ -16,11 +16,15 @@ export interface Skill {
   directoryPath: string;
   files: FileTreeNode[];
   sha: string;
+  resourceId?: string;
+  isForked?: boolean;
 }
 
 export interface SkillSummary {
   slug: string;
   name: string;
   description: string;
+  isForked?: boolean;
+  resourceId?: string;
 }
 
