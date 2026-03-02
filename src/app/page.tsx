@@ -64,7 +64,7 @@ export default async function DashboardPage() {
           ) : (
             <div className="space-y-2">
               {recentSkills.map((s) => (
-                <Link key={s.slug} href={`/skills/${s.slug}`}>
+                <Link key={s.slug} href={`/skills/${s.slug}`} className="block">
                   <Card className="p-3 hover:bg-accent transition-colors">
                     <div className="flex items-center gap-2">
                       <Sparkles className="h-4 w-4 text-muted-foreground" />
@@ -88,7 +88,7 @@ export default async function DashboardPage() {
           ) : (
             <div className="space-y-2">
               {recentAgents.map((a) => (
-                <Link key={a.slug} href={`/agents/${a.slug}`}>
+                <Link key={a.slug} href={`/agents/${a.slug}`} className="block">
                   <Card className="p-3 hover:bg-accent transition-colors">
                     <div className="flex items-center gap-2">
                       <Bot className="h-4 w-4 text-muted-foreground" />
