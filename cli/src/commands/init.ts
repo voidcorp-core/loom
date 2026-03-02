@@ -22,6 +22,7 @@ export interface InitOptions {
   addSkill?: string[];
   removeSkill?: string[];
   target: TargetConfig;
+  targetExplicit?: boolean;
 }
 
 // --- Entry Point ---
@@ -36,7 +37,7 @@ export async function initCommand(presetSlug?: string, opts: InitOptions = {} as
     }
 
     if (!presetSlug && !hasFlags) {
-      await interactiveInit(opts.target);
+      await interactiveInit(opts.target, opts.targetExplicit);
     } else {
       await nonInteractiveInit(presetSlug!, opts);
     }
@@ -52,46 +53,50 @@ export async function initCommand(presetSlug?: string, opts: InitOptions = {} as
 
 // --- Interactive Mode ---
 
-async function interactiveInit(target: TargetConfig): Promise<void> {
+async function interactiveInit(target: TargetConfig, targetExplicit?: boolean): Promise<void> {
   p.intro(pc.bgCyan(pc.black(" loom init ")));
 
-  // Runtime target selection
-  const builtinEntries = Object.values(BUILTIN_TARGETS);
-  const targetChoice = await p.select({
-    message: "Choose a target runtime",
-    options: [
-      ...builtinEntries.map((t) => ({
-        value: t.name,
-        label: t.description,
-      })),
-      { value: "custom", label: "Custom — choose directory and context file" },
-    ],
-    initialValue: target.name,
-  });
-
-  if (p.isCancel(targetChoice)) {
-    p.cancel("Operation cancelled.");
-    process.exit(0);
-  }
-
-  if (targetChoice === "custom") {
-    const customDir = await p.text({
-      message: "Target directory",
-      placeholder: ".myruntime",
-      validate: (v) => (v.length === 0 ? "Required" : undefined),
+  // Skip target selection when explicitly set via --claude, --cursor, or --target
+  if (!targetExplicit) {
+    const builtinEntries = Object.values(BUILTIN_TARGETS);
+    const targetChoice = await p.select({
+      message: "Choose a target runtime",
+      options: [
+        ...builtinEntries.map((t) => ({
+          value: t.name,
+          label: t.description,
+        })),
+        { value: "custom", label: "Custom — choose directory and context file" },
+      ],
+      initialValue: target.name,
     });
-    if (p.isCancel(customDir)) { p.cancel("Operation cancelled."); process.exit(0); }
 
-    const customFile = await p.text({
-      message: "Context file name",
-      placeholder: "CONTEXT.md",
-      validate: (v) => (v.length === 0 ? "Required" : undefined),
-    });
-    if (p.isCancel(customFile)) { p.cancel("Operation cancelled."); process.exit(0); }
+    if (p.isCancel(targetChoice)) {
+      p.cancel("Operation cancelled.");
+      process.exit(0);
+    }
 
-    target = resolveTarget("custom", customDir as string, customFile as string);
+    if (targetChoice === "custom") {
+      const customDir = await p.text({
+        message: "Target directory",
+        placeholder: ".myruntime",
+        validate: (v) => (v.length === 0 ? "Required" : undefined),
+      });
+      if (p.isCancel(customDir)) { p.cancel("Operation cancelled."); process.exit(0); }
+
+      const customFile = await p.text({
+        message: "Context file name",
+        placeholder: "CONTEXT.md",
+        validate: (v) => (v.length === 0 ? "Required" : undefined),
+      });
+      if (p.isCancel(customFile)) { p.cancel("Operation cancelled."); process.exit(0); }
+
+      target = resolveTarget("custom", customDir as string, customFile as string);
+    } else {
+      target = BUILTIN_TARGETS[targetChoice as string];
+    }
   } else {
-    target = BUILTIN_TARGETS[targetChoice as string];
+    p.log.info(`Target: ${target.description}`);
   }
 
   const presets = await listPresets();

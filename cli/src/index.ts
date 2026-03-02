@@ -48,21 +48,40 @@ program
   .option("--remove-agent <slugs...>", "Remove agents from preset")
   .option("--add-skill <slugs...>", "Add extra skills")
   .option("--remove-skill <slugs...>", "Remove skills from preset")
-  .option("--target <name>", `Output target: ${[...listTargetNames(), "custom"].join(", ")}`, DEFAULT_TARGET)
+  .option("--claude", "Use Claude Code target (.claude/ + CLAUDE.md)")
+  .option("--cursor", "Use Cursor target (.cursor/ + .cursorrules)")
+  .option("--target <name>", `Output target: ${[...listTargetNames(), "custom"].join(", ")}`)
   .option("--target-dir <dir>", "Custom target directory")
   .option("--context-file <file>", "Custom context file name")
   .action(async (preset: string | undefined, opts: Record<string, unknown>) => {
-    const target = resolveTarget(
-      opts.target as string,
-      opts.targetDir as string | undefined,
-      opts.contextFile as string | undefined
-    );
+    // Resolve target: shortcut flags > --target > default
+    let target: ReturnType<typeof resolveTarget>;
+    let targetExplicit = false;
+
+    if (opts.claude) {
+      target = BUILTIN_TARGETS["claude-code"];
+      targetExplicit = true;
+    } else if (opts.cursor) {
+      target = BUILTIN_TARGETS["cursor"];
+      targetExplicit = true;
+    } else if (opts.target) {
+      target = resolveTarget(
+        opts.target as string,
+        opts.targetDir as string | undefined,
+        opts.contextFile as string | undefined
+      );
+      targetExplicit = true;
+    } else {
+      target = BUILTIN_TARGETS[DEFAULT_TARGET];
+    }
+
     await initCommand(preset, {
       addAgent: opts.addAgent as string[] | undefined,
       removeAgent: opts.removeAgent as string[] | undefined,
       addSkill: opts.addSkill as string[] | undefined,
       removeSkill: opts.removeSkill as string[] | undefined,
       target,
+      targetExplicit,
     });
   });
 
