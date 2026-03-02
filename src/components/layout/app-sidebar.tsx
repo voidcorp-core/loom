@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
+import Image from "next/image";
 import {
   LayoutDashboard,
   Sparkles,
@@ -40,9 +41,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader className="px-4 py-4">
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm">
-            L
-          </div>
+          <Image src="/logo.svg" alt="Loom" width={28} height={28} className="dark:invert" />
           <span className="text-lg font-semibold">Loom</span>
         </Link>
       </SidebarHeader>
