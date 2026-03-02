@@ -1,5 +1,6 @@
 export interface TargetConfig {
   name: string;
+  description: string;
   dir: string;
   agentsSubdir: string;
   skillsSubdir: string;
@@ -7,21 +8,42 @@ export interface TargetConfig {
   contextFile: string;
 }
 
-export const CLAUDE_CODE_TARGET: TargetConfig = {
-  name: "claude-code",
-  dir: ".claude",
-  agentsSubdir: "agents",
-  skillsSubdir: "skills",
-  orchestratorFile: "orchestrator.md",
-  contextFile: "CLAUDE.md",
+// --- Built-in targets registry ---
+
+export const BUILTIN_TARGETS: Record<string, TargetConfig> = {
+  "claude-code": {
+    name: "claude-code",
+    description: "Claude Code — .claude/ + CLAUDE.md",
+    dir: ".claude",
+    agentsSubdir: "agents",
+    skillsSubdir: "skills",
+    orchestratorFile: "orchestrator.md",
+    contextFile: "CLAUDE.md",
+  },
+  cursor: {
+    name: "cursor",
+    description: "Cursor — .cursor/ + .cursorrules",
+    dir: ".cursor",
+    agentsSubdir: "agents",
+    skillsSubdir: "skills",
+    orchestratorFile: "orchestrator.md",
+    contextFile: ".cursorrules",
+  },
 };
+
+export const DEFAULT_TARGET = "claude-code";
+
+export function listTargetNames(): string[] {
+  return Object.keys(BUILTIN_TARGETS);
+}
 
 export function resolveTarget(
   targetName: string,
   customDir?: string,
   customContextFile?: string
 ): TargetConfig {
-  if (targetName === "claude-code") return CLAUDE_CODE_TARGET;
+  const builtin = BUILTIN_TARGETS[targetName];
+  if (builtin) return builtin;
 
   if (targetName === "custom") {
     if (!customDir || !customContextFile) {
@@ -31,6 +53,7 @@ export function resolveTarget(
     }
     return {
       name: "custom",
+      description: `Custom — ${customDir}/ + ${customContextFile}`,
       dir: customDir,
       agentsSubdir: "agents",
       skillsSubdir: "skills",
@@ -39,7 +62,8 @@ export function resolveTarget(
     };
   }
 
+  const available = [...listTargetNames(), "custom"].join(", ");
   throw new Error(
-    `Unknown target "${targetName}". Use "claude-code" or "custom".`
+    `Unknown target "${targetName}". Available: ${available}.`
   );
 }

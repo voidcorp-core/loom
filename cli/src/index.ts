@@ -3,7 +3,7 @@ import { Command } from "commander";
 import { listCommand } from "./commands/list.js";
 import { addCommand } from "./commands/add.js";
 import { initCommand } from "./commands/init.js";
-import { resolveTarget } from "./lib/target.js";
+import { resolveTarget, DEFAULT_TARGET, listTargetNames } from "./lib/target.js";
 
 const require = createRequire(import.meta.url);
 const { version } = require("../package.json");
@@ -28,7 +28,7 @@ program
   .description("Download an agent or skill from the library")
   .argument("<type>", "Type: agent or skill")
   .argument("<slug>", "Slug of the agent or skill")
-  .option("--target <name>", "Output target: claude-code or custom", "claude-code")
+  .option("--target <name>", `Output target: ${[...listTargetNames(), "custom"].join(", ")}`, DEFAULT_TARGET)
   .option("--target-dir <dir>", "Custom target directory")
   .option("--context-file <file>", "Custom context file name")
   .action(async (type: string, slug: string, opts: Record<string, string>) => {
@@ -44,7 +44,7 @@ program
   .option("--remove-agent <slugs...>", "Remove agents from preset")
   .option("--add-skill <slugs...>", "Add extra skills")
   .option("--remove-skill <slugs...>", "Remove skills from preset")
-  .option("--target <name>", "Output target: claude-code or custom", "claude-code")
+  .option("--target <name>", `Output target: ${[...listTargetNames(), "custom"].join(", ")}`, DEFAULT_TARGET)
   .option("--target-dir <dir>", "Custom target directory")
   .option("--context-file <file>", "Custom context file name")
   .action(async (preset: string | undefined, opts: Record<string, unknown>) => {
