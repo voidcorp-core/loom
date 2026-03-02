@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/layout/theme-provider";
 import { SessionProvider } from "@/components/layout/session-provider";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { SearchPalette } from "@/components/layout/search-palette";
+import { SearchShortcut } from "@/components/layout/search-shortcut";
 import { Separator } from "@/components/ui/separator";
 import { Toaster } from "@/components/ui/sonner";
 import { auth } from "@/lib/auth";
@@ -48,9 +49,7 @@ export default async function RootLayout({
                     <SidebarTrigger />
                     <Separator orientation="vertical" className="h-6" />
                     <div className="flex-1" />
-                    <kbd className="pointer-events-none hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground sm:flex">
-                      <span className="text-xs">&#x2318;</span>K
-                    </kbd>
+                    <SearchShortcut />
                   </header>
                   <main className="flex-1 p-6">{children}</main>
                 </SidebarInset>
