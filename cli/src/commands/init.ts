@@ -13,7 +13,8 @@ import {
 } from "../lib/library.js";
 import { writeAgent, writeSkill, writeContextFile, writeOrchestrator } from "../lib/writer.js";
 import { generateContextFile, generateOrchestrator, type AgentWithSkills } from "../lib/generator.js";
-import type { TargetConfig } from "../lib/target.js";
+import { type TargetConfig, BUILTIN_TARGETS, resolveTarget } from "../lib/target.js";
+import { saveConfig } from "../lib/config.js";
 
 export interface InitOptions {
   addAgent?: string[];
@@ -53,6 +54,45 @@ export async function initCommand(presetSlug?: string, opts: InitOptions = {} as
 
 async function interactiveInit(target: TargetConfig): Promise<void> {
   p.intro(pc.bgCyan(pc.black(" loom init ")));
+
+  // Runtime target selection
+  const builtinEntries = Object.values(BUILTIN_TARGETS);
+  const targetChoice = await p.select({
+    message: "Choose a target runtime",
+    options: [
+      ...builtinEntries.map((t) => ({
+        value: t.name,
+        label: t.description,
+      })),
+      { value: "custom", label: "Custom — choose directory and context file" },
+    ],
+    initialValue: target.name,
+  });
+
+  if (p.isCancel(targetChoice)) {
+    p.cancel("Operation cancelled.");
+    process.exit(0);
+  }
+
+  if (targetChoice === "custom") {
+    const customDir = await p.text({
+      message: "Target directory",
+      placeholder: ".myruntime",
+      validate: (v) => (v.length === 0 ? "Required" : undefined),
+    });
+    if (p.isCancel(customDir)) { p.cancel("Operation cancelled."); process.exit(0); }
+
+    const customFile = await p.text({
+      message: "Context file name",
+      placeholder: "CONTEXT.md",
+      validate: (v) => (v.length === 0 ? "Required" : undefined),
+    });
+    if (p.isCancel(customFile)) { p.cancel("Operation cancelled."); process.exit(0); }
+
+    target = resolveTarget("custom", customDir as string, customFile as string);
+  } else {
+    target = BUILTIN_TARGETS[targetChoice as string];
+  }
 
   const presets = await listPresets();
   if (presets.length === 0) {
@@ -138,6 +178,7 @@ async function interactiveInit(target: TargetConfig): Promise<void> {
 
   await generateAndWrite(preset, agentSlugs, skillSlugs, target);
 
+  saveConfig(target);
   s.stop("Project files generated.");
 
   p.outro(pc.green(`Done! ${agentSlugs.length} agent(s), ${skillSlugs.length} skill(s), ${target.contextFile} ready.`));
@@ -200,6 +241,7 @@ async function nonInteractiveInit(presetSlug: string, opts: InitOptions): Promis
   console.log(pc.bold(pc.cyan(`\n  Initializing preset "${preset.name}"...\n`)));
 
   await generateAndWrite(preset, agentSlugs, skillSlugs, target);
+  saveConfig(target);
 
   console.log(
     pc.bold(

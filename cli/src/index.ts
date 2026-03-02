@@ -3,7 +3,8 @@ import { Command } from "commander";
 import { listCommand } from "./commands/list.js";
 import { addCommand } from "./commands/add.js";
 import { initCommand } from "./commands/init.js";
-import { resolveTarget, DEFAULT_TARGET, listTargetNames } from "./lib/target.js";
+import { resolveTarget, DEFAULT_TARGET, listTargetNames, BUILTIN_TARGETS } from "./lib/target.js";
+import { loadConfig } from "./lib/config.js";
 
 const require = createRequire(import.meta.url);
 const { version } = require("../package.json");
@@ -32,7 +33,10 @@ program
   .option("--target-dir <dir>", "Custom target directory")
   .option("--context-file <file>", "Custom context file name")
   .action(async (type: string, slug: string, opts: Record<string, string>) => {
-    const target = resolveTarget(opts.target, opts.targetDir, opts.contextFile);
+    const savedConfig = loadConfig();
+    const target = opts.target !== DEFAULT_TARGET || opts.targetDir || opts.contextFile
+      ? resolveTarget(opts.target, opts.targetDir, opts.contextFile)
+      : savedConfig ?? BUILTIN_TARGETS[DEFAULT_TARGET];
     await addCommand(type, slug, target);
   });
 

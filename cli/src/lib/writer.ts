@@ -7,17 +7,17 @@ function ensureDir(dirPath: string): void {
 }
 
 export function writeAgent(target: TargetConfig, slug: string, content: string, cwd = process.cwd()): string {
-  const dir = path.join(cwd, target.dir, target.agentsSubdir);
+  const dir = path.join(cwd, target.dir, target.agentsSubdir, slug);
   ensureDir(dir);
-  const filePath = path.join(dir, `${slug}.md`);
+  const filePath = path.join(dir, "AGENT.md");
   fs.writeFileSync(filePath, content, "utf-8");
   return filePath;
 }
 
 export function writeSkill(target: TargetConfig, slug: string, content: string, cwd = process.cwd()): string {
-  const dir = path.join(cwd, target.dir, target.skillsSubdir);
+  const dir = path.join(cwd, target.dir, target.skillsSubdir, slug);
   ensureDir(dir);
-  const filePath = path.join(dir, `${slug}.md`);
+  const filePath = path.join(dir, "SKILL.md");
   fs.writeFileSync(filePath, content, "utf-8");
   return filePath;
 }
