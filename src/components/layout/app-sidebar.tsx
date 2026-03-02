@@ -10,6 +10,7 @@ import {
   Bot,
   Layers,
   LogOut,
+  LogIn,
 } from "lucide-react";
 import {
   Sidebar,
@@ -94,7 +95,12 @@ export function AppSidebar() {
             </Button>
           </div>
         ) : (
-          <p className="text-xs text-muted-foreground">Loom v1.0.0</p>
+          <Button variant="outline" size="sm" className="w-full gap-2" asChild>
+            <Link href="/login">
+              <LogIn className="h-4 w-4" />
+              Sign in
+            </Link>
+          </Button>
         )}
       </SidebarFooter>
     </Sidebar>
