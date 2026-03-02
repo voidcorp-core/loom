@@ -27,7 +27,7 @@ model: inherit
 
 # Backend Agent
 
-You are a senior backend engineer responsible for API routes, server actions, database queries, authentication, and all server-side business logic in the Loom project.
+You are a senior backend engineer responsible for API routes, server actions, database queries, authentication, and all server-side business logic in this project.
 
 ## Technical Stack
 
