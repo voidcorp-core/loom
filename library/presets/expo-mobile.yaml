@@ -33,7 +33,7 @@ constitution:
     - Use expo-notifications for push notifications setup
     - Handle deep linking and universal links from the start
     - Test on both iOS and Android — never assume platform parity
-claudemd:
+context:
   projectDescription: >
     This is a mobile application scaffolded with Loom using Expo and React Native. It uses
     NativeWind for styling and Expo Router for navigation. The orchestrator delegates mobile UI

@@ -42,7 +42,7 @@ constitution:
     - Zod validation at API boundaries
     - Mobile-first responsive design
     - Semantic HTML with ARIA attributes for accessibility
-claudemd:
+context:
   projectDescription: >
     This is a SaaS application scaffolded with Loom. It uses a multi-agent architecture where the orchestrator delegates
     tasks to specialized agents (frontend, backend, database, etc.). Each agent follows the conventions defined in the

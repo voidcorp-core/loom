@@ -111,12 +111,12 @@ export function PresetDetail({ preset }: { preset: Preset }) {
 
         <Card>
           <CardHeader>
-            <CardTitle>CLAUDE.md</CardTitle>
+            <CardTitle>Context</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-1">
               <p className="text-sm font-medium text-muted-foreground">Project Description</p>
-              <p className="text-sm">{preset.claudemd.projectDescription || "None"}</p>
+              <p className="text-sm">{preset.context.projectDescription || "None"}</p>
             </div>
           </CardContent>
         </Card>

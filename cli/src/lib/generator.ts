@@ -1,5 +1,6 @@
 import matter from "gray-matter";
 import type { Preset } from "./library.js";
+import type { TargetConfig } from "./target.js";
 
 interface AgentInfo {
   slug: string;
@@ -14,15 +15,16 @@ export interface AgentWithSkills {
   skills: string[];
 }
 
-export function generateClaudeMd(
+export function generateContextFile(
   preset: Preset,
-  agents: AgentInfo[]
+  agents: AgentInfo[],
+  target: TargetConfig
 ): string {
   const lines: string[] = [];
 
   lines.push(`# ${preset.name}`);
   lines.push("");
-  lines.push(preset.claudemd.projectDescription);
+  lines.push(preset.context.projectDescription);
   lines.push("");
 
   // Principles
@@ -73,7 +75,7 @@ export function generateClaudeMd(
   // Orchestrator (always present)
   lines.push("## Orchestrator");
   lines.push("");
-  lines.push("Use the orchestrator agent (`.claude/orchestrator.md`) as the main coordinator. It will analyze tasks, break them into subtasks, and delegate to the appropriate specialized agents listed above.");
+  lines.push(`Use the orchestrator agent (\`${target.dir}/${target.orchestratorFile}\`) as the main coordinator. It will analyze tasks, break them into subtasks, and delegate to the appropriate specialized agents listed above.`);
   lines.push("");
 
   return lines.join("\n");

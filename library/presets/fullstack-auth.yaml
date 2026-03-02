@@ -38,7 +38,7 @@ constitution:
     - Enable Row Level Security on all tables — no exceptions
     - Use server-side session validation, never trust client-only auth state
     - Separate admin and user dashboards with distinct layouts
-claudemd:
+context:
   projectDescription: >
     This is a fullstack SaaS with complete authentication scaffolded with Loom. It includes email,
     OAuth, and magic link flows via Supabase Auth, plus RBAC and admin dashboard. The orchestrator

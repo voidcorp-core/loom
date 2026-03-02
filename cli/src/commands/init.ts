@@ -11,19 +11,21 @@ import {
   type Preset,
   type AgentSummary,
 } from "../lib/library.js";
-import { writeAgent, writeSkill, writeClaudeMd, writeOrchestrator } from "../lib/writer.js";
-import { generateClaudeMd, generateOrchestrator, type AgentWithSkills } from "../lib/generator.js";
+import { writeAgent, writeSkill, writeContextFile, writeOrchestrator } from "../lib/writer.js";
+import { generateContextFile, generateOrchestrator, type AgentWithSkills } from "../lib/generator.js";
+import type { TargetConfig } from "../lib/target.js";
 
 export interface InitOptions {
   addAgent?: string[];
   removeAgent?: string[];
   addSkill?: string[];
   removeSkill?: string[];
+  target: TargetConfig;
 }
 
 // --- Entry Point ---
 
-export async function initCommand(presetSlug?: string, opts: InitOptions = {}): Promise<void> {
+export async function initCommand(presetSlug?: string, opts: InitOptions = {} as InitOptions): Promise<void> {
   try {
     const hasFlags = !!(opts.addAgent || opts.removeAgent || opts.addSkill || opts.removeSkill);
 
@@ -33,7 +35,7 @@ export async function initCommand(presetSlug?: string, opts: InitOptions = {}): 
     }
 
     if (!presetSlug && !hasFlags) {
-      await interactiveInit();
+      await interactiveInit(opts.target);
     } else {
       await nonInteractiveInit(presetSlug!, opts);
     }
@@ -49,7 +51,7 @@ export async function initCommand(presetSlug?: string, opts: InitOptions = {}): 
 
 // --- Interactive Mode ---
 
-async function interactiveInit(): Promise<void> {
+async function interactiveInit(target: TargetConfig): Promise<void> {
   p.intro(pc.bgCyan(pc.black(" loom init ")));
 
   const presets = await listPresets();
@@ -134,16 +136,17 @@ async function interactiveInit(): Promise<void> {
   const s = p.spinner();
   s.start("Generating project files...");
 
-  await generateAndWrite(preset, agentSlugs, skillSlugs);
+  await generateAndWrite(preset, agentSlugs, skillSlugs, target);
 
   s.stop("Project files generated.");
 
-  p.outro(pc.green(`Done! ${agentSlugs.length} agent(s), ${skillSlugs.length} skill(s), CLAUDE.md ready.`));
+  p.outro(pc.green(`Done! ${agentSlugs.length} agent(s), ${skillSlugs.length} skill(s), ${target.contextFile} ready.`));
 }
 
 // --- Non-Interactive Mode ---
 
 async function nonInteractiveInit(presetSlug: string, opts: InitOptions): Promise<void> {
+  const target = opts.target;
   const preset = await getPreset(presetSlug);
   const allAgents = await listAgents();
 
@@ -196,12 +199,12 @@ async function nonInteractiveInit(presetSlug: string, opts: InitOptions): Promis
 
   console.log(pc.bold(pc.cyan(`\n  Initializing preset "${preset.name}"...\n`)));
 
-  await generateAndWrite(preset, agentSlugs, skillSlugs);
+  await generateAndWrite(preset, agentSlugs, skillSlugs, target);
 
   console.log(
     pc.bold(
       pc.cyan(
-        `\n  Done! ${agentSlugs.length} agent(s), ${skillSlugs.length} skill(s), CLAUDE.md ready.\n`
+        `\n  Done! ${agentSlugs.length} agent(s), ${skillSlugs.length} skill(s), ${target.contextFile} ready.\n`
       )
     )
   );
@@ -209,7 +212,7 @@ async function nonInteractiveInit(presetSlug: string, opts: InitOptions): Promis
 
 // --- Shared Generation Logic ---
 
-async function generateAndWrite(preset: Preset, agentSlugs: string[], skillSlugs: string[]): Promise<void> {
+async function generateAndWrite(preset: Preset, agentSlugs: string[], skillSlugs: string[], target: TargetConfig): Promise<void> {
   // Fetch all agents and skills in parallel
   const agentResults = await Promise.allSettled(
     agentSlugs.map((slug) => getAgent(slug))
@@ -233,7 +236,7 @@ async function generateAndWrite(preset: Preset, agentSlugs: string[], skillSlugs
       if (slug === "orchestrator") {
         orchestratorTemplate = result.value.rawContent;
       } else {
-        writeAgent(slug, result.value.rawContent);
+        writeAgent(target, slug, result.value.rawContent);
         console.log(pc.green(`  ✓ Agent: ${slug}`));
       }
 
@@ -261,8 +264,8 @@ async function generateAndWrite(preset: Preset, agentSlugs: string[], skillSlugs
       agentsWithSkills,
       skillSlugs
     );
-    writeOrchestrator(orchestratorContent);
-    console.log(pc.green(`  ✓ orchestrator.md generated`));
+    writeOrchestrator(target, orchestratorContent);
+    console.log(pc.green(`  ✓ ${target.orchestratorFile} generated`));
   }
 
   // Write skills
@@ -270,17 +273,17 @@ async function generateAndWrite(preset: Preset, agentSlugs: string[], skillSlugs
     const slug = skillSlugs[i];
     const result = skillResults[i];
     if (result.status === "fulfilled") {
-      writeSkill(slug, result.value.rawContent);
+      writeSkill(target, slug, result.value.rawContent);
       console.log(pc.green(`  ✓ Skill: ${slug}`));
     } else {
       console.log(pc.yellow(`  ⚠ Skill "${slug}" skipped: ${result.reason}`));
     }
   }
 
-  // Generate CLAUDE.md
-  const claudeContent = generateClaudeMd(preset, agentInfos);
-  writeClaudeMd(claudeContent);
-  console.log(pc.green(`  ✓ CLAUDE.md generated`));
+  // Generate context file
+  const contextContent = generateContextFile(preset, agentInfos, target);
+  writeContextFile(target, contextContent);
+  console.log(pc.green(`  ✓ ${target.contextFile} generated`));
 }
 
 // --- Skill Filtering Algorithm ---

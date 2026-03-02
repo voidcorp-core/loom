@@ -62,7 +62,7 @@ constitution:
     - next-intl for all user-facing strings
     - Vitest with role-based test strategy (PUBLIC/USER/ADMIN)
     - kebab-case for all new files
-claudemd:
+context:
   projectDescription: >
     This is a full-featured SaaS application scaffolded with Loom. It follows a strict layered architecture
     (Presentation → Facade → Service → DAL → Persistence) with multi-agent orchestration. Authentication is

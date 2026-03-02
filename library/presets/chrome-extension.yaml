@@ -29,7 +29,7 @@ constitution:
     - Use chrome.storage API for persistence, never localStorage in content scripts
     - Validate all messages between content script and background worker
     - Keep content script injection minimal to avoid page performance impact
-claudemd:
+context:
   projectDescription: >
     This is a Chrome extension scaffolded with Loom using Manifest V3. The orchestrator delegates
     popup/options UI work to the frontend agent, background worker logic to the backend agent,

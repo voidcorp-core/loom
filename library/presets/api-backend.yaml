@@ -30,7 +30,7 @@ constitution:
     - Implement proper error handling with consistent error response format
     - Write integration tests for every endpoint
     - Use database transactions for multi-step mutations
-claudemd:
+context:
   projectDescription: >
     This is a backend API service scaffolded with Loom. It uses Next.js API Routes with Supabase
     as the database layer. The orchestrator delegates security concerns to the security agent,

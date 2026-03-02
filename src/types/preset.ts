@@ -5,7 +5,7 @@ export interface PresetConstitution {
   customSections?: Record<string, string>;
 }
 
-export interface PresetClaudeMd {
+export interface PresetContext {
   projectDescription: string;
 }
 
@@ -16,7 +16,7 @@ export interface Preset {
   agents: string[];
   skills: string[];
   constitution: PresetConstitution;
-  claudemd: PresetClaudeMd;
+  context: PresetContext;
   sha: string;
 }
 

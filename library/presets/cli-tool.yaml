@@ -24,7 +24,7 @@ constitution:
     - Support --json flag for machine-readable output
     - Use stderr for progress/logging, stdout for actual output
     - Include a --version and --help flag on every command
-claudemd:
+context:
   projectDescription: >
     This is a CLI tool scaffolded with Loom. It uses Commander.js for argument parsing and tsup
     for bundling. The orchestrator delegates implementation to the backend agent and testing to

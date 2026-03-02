@@ -41,7 +41,7 @@ export interface Preset {
     conventions: string[];
     customSections?: Record<string, string>;
   };
-  claudemd: {
+  context: {
     projectDescription: string;
   };
 }

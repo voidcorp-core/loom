@@ -42,7 +42,7 @@ constitution:
     - Use ISR or SSG for product catalog pages for performance
     - Add JSON-LD structured data for products (price, availability, reviews)
     - Implement optimistic cart updates with server validation
-claudemd:
+context:
   projectDescription: >
     This is an e-commerce application scaffolded with Loom. It includes product catalog, shopping
     cart, Stripe checkout, and transactional emails. The orchestrator coordinates the full agent

@@ -31,7 +31,7 @@ constitution:
     - Implement structured data (JSON-LD) for SEO
     - Use CSS animations and transitions over JS-based animation libraries
     - Ensure all interactive elements have visible focus states
-claudemd:
+context:
   projectDescription: >
     This is a landing page / marketing site scaffolded with Loom. It focuses on SEO, conversion
     optimization, and fast loading. The orchestrator delegates visual tasks to the frontend and
