@@ -80,14 +80,14 @@ async function interactiveInit(target: TargetConfig, targetExplicit?: boolean): 
       const customDir = await p.text({
         message: "Target directory",
         placeholder: ".myruntime",
-        validate: (v) => (v.length === 0 ? "Required" : undefined),
+        validate: (v) => (!v || v.length === 0 ? "Required" : undefined),
       });
       if (p.isCancel(customDir)) { p.cancel("Operation cancelled."); process.exit(0); }
 
       const customFile = await p.text({
         message: "Context file name",
         placeholder: "CONTEXT.md",
-        validate: (v) => (v.length === 0 ? "Required" : undefined),
+        validate: (v) => (!v || v.length === 0 ? "Required" : undefined),
       });
       if (p.isCancel(customFile)) { p.cancel("Operation cancelled."); process.exit(0); }
 
@@ -269,7 +269,7 @@ async function generateAndWrite(preset: Preset, agentSlugs: string[], skillSlugs
   );
 
   // Write agents (skip orchestrator — it will be generated separately)
-  const agentInfos: { slug: string; name: string; role: string }[] = [];
+  const agentInfos: { slug: string; name: string; role: string; description: string }[] = [];
   const agentsWithSkills: AgentWithSkills[] = [];
   let orchestratorTemplate: string | null = null;
 
@@ -291,6 +291,7 @@ async function generateAndWrite(preset: Preset, agentSlugs: string[], skillSlugs
         slug,
         name: (fm.name as string) || slug,
         role: (fm.role as string) || "",
+        description: (fm.description as string) || "",
       });
 
       agentsWithSkills.push({
@@ -328,7 +329,7 @@ async function generateAndWrite(preset: Preset, agentSlugs: string[], skillSlugs
   }
 
   // Generate context file
-  const contextContent = generateContextFile(preset, agentInfos, target);
+  const contextContent = generateContextFile(preset, agentInfos, target, skillSlugs);
   writeContextFile(target, contextContent);
   console.log(pc.green(`  ✓ ${target.contextFile} generated`));
 }

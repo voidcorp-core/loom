@@ -6,6 +6,7 @@ interface AgentInfo {
   slug: string;
   name: string;
   role: string;
+  description: string;
 }
 
 export interface AgentWithSkills {
@@ -18,18 +19,20 @@ export interface AgentWithSkills {
 export function generateContextFile(
   preset: Preset,
   agents: AgentInfo[],
-  target: TargetConfig
+  target: TargetConfig,
+  skillSlugs: string[] = []
 ): string {
   const lines: string[] = [];
 
   lines.push(`# ${preset.name}`);
   lines.push("");
-  lines.push(preset.context.projectDescription);
+  lines.push(preset.context.projectDescription.trim());
   lines.push("");
 
   // Principles
   if (preset.constitution.principles.length > 0) {
     lines.push("## Principles");
+    lines.push("");
     for (const p of preset.constitution.principles) {
       lines.push(`- ${p}`);
     }
@@ -39,6 +42,7 @@ export function generateContextFile(
   // Stack
   if (preset.constitution.stack.length > 0) {
     lines.push("## Stack");
+    lines.push("");
     for (const s of preset.constitution.stack) {
       lines.push(`- ${s}`);
     }
@@ -48,6 +52,7 @@ export function generateContextFile(
   // Conventions
   if (preset.constitution.conventions.length > 0) {
     lines.push("## Conventions");
+    lines.push("");
     for (const c of preset.constitution.conventions) {
       lines.push(`- ${c}`);
     }
@@ -58,24 +63,61 @@ export function generateContextFile(
   if (preset.constitution.customSections) {
     for (const [title, content] of Object.entries(preset.constitution.customSections)) {
       lines.push(`## ${title}`);
+      lines.push("");
       lines.push(content);
       lines.push("");
     }
   }
 
-  // Agents
-  if (agents.length > 0) {
-    lines.push("## Agents");
-    for (const agent of agents) {
-      lines.push(`- **${agent.slug}**: ${agent.name} — ${agent.role}`);
+  // Commands
+  lines.push("## Commands");
+  lines.push("");
+  lines.push("```bash");
+  lines.push("npm run dev          # Start development server");
+  lines.push("npm run build        # Build for production");
+  lines.push("npm run lint         # Run linter");
+  lines.push("npm test             # Run tests");
+  lines.push("```");
+  lines.push("");
+
+  // Agents — loom-managed section
+  lines.push("<!-- loom:agents:start -->");
+  lines.push("## Agents");
+  lines.push("");
+
+  const nonOrchestrator = agents.filter((a) => a.slug !== "orchestrator");
+  if (nonOrchestrator.length > 0) {
+    lines.push(`This project uses ${nonOrchestrator.length} specialized agents coordinated by an orchestrator (\`${target.dir}/${target.orchestratorFile}\`).`);
+    lines.push("");
+    lines.push("| Agent | Role | Description |");
+    lines.push("|-------|------|-------------|");
+    for (const agent of nonOrchestrator) {
+      lines.push(`| \`${agent.slug}\` | ${agent.name} | ${agent.description} |`);
     }
     lines.push("");
   }
-
-  // Orchestrator (always present)
-  lines.push("## Orchestrator");
+  lines.push("<!-- loom:agents:end -->");
   lines.push("");
-  lines.push(`Use the orchestrator agent (\`${target.dir}/${target.orchestratorFile}\`) as the main coordinator. It will analyze tasks, break them into subtasks, and delegate to the appropriate specialized agents listed above.`);
+
+  // Skills — loom-managed section
+  if (skillSlugs.length > 0) {
+    lines.push("<!-- loom:skills:start -->");
+    lines.push("## Skills");
+    lines.push("");
+    lines.push("Installed skills providing domain-specific conventions and patterns:");
+    lines.push("");
+    for (const slug of skillSlugs) {
+      lines.push(`- \`${slug}\``);
+    }
+    lines.push("");
+    lines.push("<!-- loom:skills:end -->");
+    lines.push("");
+  }
+
+  // Orchestrator usage
+  lines.push("## How to use");
+  lines.push("");
+  lines.push(`The orchestrator agent (\`${target.dir}/${target.orchestratorFile}\`) is the main entry point. It analyzes tasks, breaks them into subtasks, and delegates to the appropriate specialized agents. Each agent has access to its assigned skills for domain-specific guidance.`);
   lines.push("");
 
   return lines.join("\n");
