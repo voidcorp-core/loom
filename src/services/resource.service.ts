@@ -177,6 +177,48 @@ export async function forkResource(
 }
 
 /**
+ * Create a brand-new resource owned by the user (not a fork).
+ */
+export async function createResource(
+  type: ResourceType,
+  userId: string,
+  data: { slug: string; title: string; content: string; metadata?: Record<string, unknown> }
+): Promise<ResourceRow> {
+  // Check slug uniqueness for this user
+  const existing = await db
+    .select()
+    .from(resources)
+    .where(
+      and(
+        eq(resources.type, type),
+        eq(resources.slug, data.slug),
+        eq(resources.ownerId, userId)
+      )
+    )
+    .then((rows) => rows[0]);
+
+  if (existing) {
+    throw new Error("You already have a resource with this slug");
+  }
+
+  const [created] = await db
+    .insert(resources)
+    .values({
+      type,
+      slug: data.slug,
+      title: data.title,
+      content: data.content,
+      metadata: data.metadata ?? null,
+      ownerId: userId,
+      sourceId: null,
+      isPublic: false,
+    })
+    .returning();
+
+  return created as ResourceRow;
+}
+
+/**
  * Update a resource owned by the user.
  */
 export async function updateOwnResource(

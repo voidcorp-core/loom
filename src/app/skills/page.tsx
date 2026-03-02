@@ -1,4 +1,5 @@
 import { SkillCard } from "@/components/library/skill-card";
+import { ResourceCreateButton } from "@/components/library/resource-create-button";
 import { getCurrentUser } from "@/lib/current-user";
 import { listSkillsForUser } from "@/services/skill.service";
 
@@ -10,11 +11,14 @@ export default async function SkillsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Skills</h1>
-        <p className="text-muted-foreground mt-1">
-          Reusable skill definitions for Claude Code
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Skills</h1>
+          <p className="text-muted-foreground mt-1">
+            Reusable skill definitions for Claude Code
+          </p>
+        </div>
+        {user && <ResourceCreateButton type="skill" label="Skill" />}
       </div>
 
       {skills.length === 0 ? (

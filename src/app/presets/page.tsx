@@ -1,4 +1,5 @@
 import { PresetCard } from "@/components/library/preset-card";
+import { ResourceCreateButton } from "@/components/library/resource-create-button";
 import { getCurrentUser } from "@/lib/current-user";
 import { listPresetsForUser } from "@/services/preset.service";
 
@@ -10,11 +11,14 @@ export default async function PresetsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Presets</h1>
-        <p className="text-muted-foreground mt-1">
-          Project scaffolding presets combining agents, skills, and conventions
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Presets</h1>
+          <p className="text-muted-foreground mt-1">
+            Project scaffolding presets combining agents, skills, and conventions
+          </p>
+        </div>
+        {user && <ResourceCreateButton type="preset" label="Preset" />}
       </div>
 
       {presets.length === 0 ? (

@@ -1,4 +1,5 @@
 import { AgentCard } from "@/components/library/agent-card";
+import { ResourceCreateButton } from "@/components/library/resource-create-button";
 import { getCurrentUser } from "@/lib/current-user";
 import { listAgentsForUser } from "@/services/agent.service";
 
@@ -10,11 +11,14 @@ export default async function AgentsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Agents</h1>
-        <p className="text-muted-foreground mt-1">
-          Agent definitions with roles, skills, and delegation rules
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Agents</h1>
+          <p className="text-muted-foreground mt-1">
+            Agent definitions with roles, skills, and delegation rules
+          </p>
+        </div>
+        {user && <ResourceCreateButton type="agent" label="Agent" />}
       </div>
 
       {agents.length === 0 ? (
