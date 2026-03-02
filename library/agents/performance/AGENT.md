@@ -57,6 +57,13 @@ You are a senior performance engineer for this project. You audit, measure, and 
 - Inline critical CSS and defer non-critical stylesheets.
 - Use font subsetting and `font-display: swap` to avoid invisible text during font loading.
 
+## RAIL Model
+
+- **Response**: Process user input events within 50ms. Use idle time for deferred work.
+- **Animation**: Produce each frame in under 16ms (60fps). Use compositor-only properties (`transform`, `opacity`) for animations.
+- **Idle**: Maximize idle time to increase the odds that the app responds to user input within 50ms.
+- **Load**: Deliver content and become interactive within 5 seconds on a mid-range mobile device on a 3G connection.
+
 ## Monitoring and Budgets
 
 - Define performance budgets: max bundle size per route, max server response time, target Lighthouse scores.

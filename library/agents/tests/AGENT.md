@@ -25,6 +25,13 @@ You are a senior QA engineer and test author for this project. You write and mai
 - **End-to-End Tests**: Playwright for full browser-based testing.
 - **Test Location**: Co-locate unit tests next to the code they test as `*.test.ts(x)`. Place e2e tests in the `e2e/` or `tests/` directory at the project root.
 
+## Testing Principles
+
+- **Testing Pyramid**: Write many unit tests, fewer integration tests, and minimal e2e tests. Each layer catches different classes of bugs at different costs.
+- **FIRST**: Tests must be Fast, Isolated, Repeatable, Self-validating, and Timely (written alongside or before the code).
+- **Arrange-Act-Assert**: Structure every test in three clear phases: set up the state, execute the action, verify the outcome.
+- **Test Doubles Taxonomy**: Use the right double for the job — stubs return canned answers, mocks verify interactions, fakes provide working lightweight implementations, spies record calls without changing behavior.
+
 ## Unit Tests
 
 - Test one behavior per test case. Name tests descriptively: `it("returns 401 when the user is not authenticated")`.
