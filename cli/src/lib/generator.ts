@@ -39,16 +39,6 @@ export function generateContextFile(
     lines.push("");
   }
 
-  // Stack
-  if (preset.constitution.stack.length > 0) {
-    lines.push("## Stack");
-    lines.push("");
-    for (const s of preset.constitution.stack) {
-      lines.push(`- ${s}`);
-    }
-    lines.push("");
-  }
-
   // Conventions
   if (preset.constitution.conventions.length > 0) {
     lines.push("## Conventions");

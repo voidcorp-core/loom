@@ -18,12 +18,6 @@ constitution:
     - Type-safe contracts — use Zod schemas as single source of truth
     - Test everything — unit tests for logic, integration tests for endpoints
     - Fail gracefully — meaningful error messages, proper HTTP status codes
-  stack:
-    - Next.js 16+ (API Routes)
-    - TypeScript 5 (strict)
-    - Supabase (database + auth)
-    - Zod (validation)
-    - Vercel (deployment)
   conventions:
     - Define Zod schemas for all request/response payloads
     - Use middleware for auth, rate limiting, and CORS
@@ -32,6 +26,6 @@ constitution:
     - Use database transactions for multi-step mutations
 context:
   projectDescription: >
-    This is a backend API service scaffolded with Loom. It uses Next.js API Routes with Supabase
+    This is a backend API service. It uses Next.js API Routes with Supabase
     as the database layer. The orchestrator delegates security concerns to the security agent,
     database schema work to the database agent, and testing to the tests agent.

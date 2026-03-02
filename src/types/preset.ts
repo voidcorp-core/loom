@@ -1,6 +1,5 @@
 export interface PresetConstitution {
   principles: string[];
-  stack: string[];
   conventions: string[];
   customSections?: Record<string, string>;
 }

@@ -13,11 +13,6 @@ constitution:
     - Fail loudly — clear error messages with actionable suggestions
     - Zero-config defaults — sensible defaults, override with flags
     - Scriptable — support stdin/stdout piping and non-interactive mode
-  stack:
-    - TypeScript 5 (strict)
-    - Node.js 20+
-    - Commander.js (CLI framework)
-    - tsup (bundling)
   conventions:
     - Use Commander.js for argument parsing and subcommands
     - Exit with proper codes — 0 for success, 1 for errors, 2 for usage errors
@@ -26,6 +21,6 @@ constitution:
     - Include a --version and --help flag on every command
 context:
   projectDescription: >
-    This is a CLI tool scaffolded with Loom. It uses Commander.js for argument parsing and tsup
+    This is a CLI tool. It uses Commander.js for argument parsing and tsup
     for bundling. The orchestrator delegates implementation to the backend agent and testing to
     the tests agent.

@@ -40,19 +40,6 @@ constitution:
     - Type safety everywhere — TypeScript strict, Zod validation at boundaries
     - Ship fast, iterate often — working software over perfect plans
     - Security by design — auth + RBAC + validation at every layer
-  stack:
-    - Next.js 16+ (App Router)
-    - React 19
-    - TypeScript 5 (strict)
-    - Tailwind CSS 4
-    - ShadCN UI
-    - Drizzle ORM
-    - PostgreSQL
-    - Better Auth
-    - Stripe
-    - Resend
-    - Vitest
-    - Vercel
   conventions:
     - RSC by default, "use client" only when strictly needed
     - Server Actions for all mutations, DAL for all reads
@@ -64,7 +51,7 @@ constitution:
     - kebab-case for all new files
 context:
   projectDescription: >
-    This is a full-featured SaaS application scaffolded with Loom. It follows a strict layered architecture
+    This is a full-featured SaaS application. It follows a strict layered architecture
     (Presentation → Facade → Service → DAL → Persistence) with multi-agent orchestration. Authentication is
     handled by Better Auth with RBAC via CASL. The app supports i18n with next-intl, transactional emails via
     Resend, payments via Stripe, and uses Drizzle ORM with PostgreSQL. Every feature is tested with Vitest

@@ -23,15 +23,6 @@ constitution:
     - Least privilege — users and services get only the permissions they need
     - Defense in depth — middleware, RLS, and API validation work together
     - Session management — handle expiry, refresh, and revocation properly
-  stack:
-    - Next.js 16+ (App Router)
-    - React 19
-    - TypeScript 5 (strict)
-    - Tailwind CSS 4
-    - ShadCN UI
-    - Supabase Auth (email, OAuth, magic link)
-    - Supabase (database with RLS)
-    - Vercel (deployment)
   conventions:
     - Use Supabase Auth for all authentication flows
     - Implement middleware for route protection and role checks
@@ -40,6 +31,6 @@ constitution:
     - Separate admin and user dashboards with distinct layouts
 context:
   projectDescription: >
-    This is a fullstack SaaS with complete authentication scaffolded with Loom. It includes email,
+    This is a fullstack SaaS with complete authentication. It includes email,
     OAuth, and magic link flows via Supabase Auth, plus RBAC and admin dashboard. The orchestrator
     coordinates security, frontend, backend, and database agents for auth-related tasks.

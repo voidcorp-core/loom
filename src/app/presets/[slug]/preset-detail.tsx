@@ -83,18 +83,6 @@ export function PresetDetail({ preset }: { preset: Preset }) {
               )}
             </div>
             <div className="space-y-1">
-              <p className="text-sm font-medium text-muted-foreground">Stack</p>
-              {preset.constitution.stack.length > 0 ? (
-                <ul className="list-disc list-inside text-sm space-y-1">
-                  {preset.constitution.stack.map((s, i) => (
-                    <li key={i}>{s}</li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-sm text-muted-foreground">None</p>
-              )}
-            </div>
-            <div className="space-y-1">
               <p className="text-sm font-medium text-muted-foreground">Conventions</p>
               {preset.constitution.conventions.length > 0 ? (
                 <ul className="list-disc list-inside text-sm space-y-1">

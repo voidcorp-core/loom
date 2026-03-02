@@ -19,12 +19,6 @@ constitution:
     - Performance is UX — aim for perfect Lighthouse scores
     - Mobile-first responsive — design for small screens, enhance for large
     - Accessible by default — semantic HTML, ARIA, keyboard navigation
-  stack:
-    - Next.js 16+ (static export)
-    - React 19
-    - TypeScript 5 (strict)
-    - Tailwind CSS 4
-    - Vercel (deployment)
   conventions:
     - Use Server Components and static generation for maximum performance
     - Optimize all images with next/image and proper srcset
@@ -33,6 +27,6 @@ constitution:
     - Ensure all interactive elements have visible focus states
 context:
   projectDescription: >
-    This is a landing page / marketing site scaffolded with Loom. It focuses on SEO, conversion
+    This is a landing page / marketing site. It focuses on SEO, conversion
     optimization, and fast loading. The orchestrator delegates visual tasks to the frontend and
     ux-ui agents, copywriting to marketing, and performance audits to the performance agent.

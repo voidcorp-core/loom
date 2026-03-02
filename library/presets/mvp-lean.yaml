@@ -15,13 +15,6 @@ constitution:
     - Iterate fast — build the simplest thing that works, then improve
     - Technical debt is acceptable — speed wins at the prototype stage
     - Validate assumptions — build to learn, not to last
-  stack:
-    - Next.js 16+ (App Router)
-    - React 19
-    - TypeScript 5 (strict)
-    - Tailwind CSS 4
-    - Supabase (auth + database)
-    - Vercel (deployment)
   conventions:
     - Prefer inline styles and co-located logic over abstractions
     - Use Supabase client directly — skip custom API layers when possible
@@ -30,6 +23,6 @@ constitution:
     - One file per feature when practical
 context:
   projectDescription: >
-    This is a lean MVP scaffolded with Loom. Speed and iteration are prioritized over architecture.
+    This is a lean MVP. Speed and iteration are prioritized over architecture.
     The orchestrator coordinates a small team of frontend, backend, and database agents to ship
     features as fast as possible.

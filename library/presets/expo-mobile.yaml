@@ -20,13 +20,6 @@ constitution:
     - Offline-first — the app must be usable without network connectivity
     - Battery conscious — minimize background tasks and network requests
     - Smooth animations — target 60fps, never block the JS thread
-  stack:
-    - Expo SDK 52+
-    - React Native
-    - TypeScript 5 (strict)
-    - NativeWind (Tailwind for React Native)
-    - Expo Router (file-based navigation)
-    - Supabase (auth + database)
   conventions:
     - Use Expo Router for all navigation — file-based routing
     - Implement offline storage with async-storage or MMKV for critical data
@@ -35,7 +28,7 @@ constitution:
     - Test on both iOS and Android — never assume platform parity
 context:
   projectDescription: >
-    This is a mobile application scaffolded with Loom using Expo and React Native. It uses
+    This is a mobile application using Expo and React Native. It uses
     NativeWind for styling and Expo Router for navigation. The orchestrator delegates mobile UI
     to the frontend agent, API integration to the backend agent, and native feature testing
     to the tests agent.

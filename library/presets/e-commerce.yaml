@@ -27,15 +27,6 @@ constitution:
     - Payment security — never handle raw card data, always use Stripe Elements
     - SEO drives traffic — product pages must be indexable with structured data
     - Performance converts — every 100ms of load time impacts conversion rate
-  stack:
-    - Next.js 16+ (App Router)
-    - React 19
-    - TypeScript 5 (strict)
-    - Tailwind CSS 4
-    - ShadCN UI
-    - Supabase (auth + database)
-    - Stripe (payments)
-    - Vercel (deployment)
   conventions:
     - Use Stripe Checkout or Payment Elements — never collect card details directly
     - Implement webhook handlers for Stripe events (payment success, refund, etc.)
@@ -44,6 +35,6 @@ constitution:
     - Implement optimistic cart updates with server validation
 context:
   projectDescription: >
-    This is an e-commerce application scaffolded with Loom. It includes product catalog, shopping
+    This is an e-commerce application. It includes product catalog, shopping
     cart, Stripe checkout, and transactional emails. The orchestrator coordinates the full agent
     team including marketing for copywriting and SEO.

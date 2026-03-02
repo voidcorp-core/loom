@@ -37,7 +37,6 @@ export interface Preset {
   skills: string[];
   constitution: {
     principles: string[];
-    stack: string[];
     conventions: string[];
     customSections?: Record<string, string>;
   };
