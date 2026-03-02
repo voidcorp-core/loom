@@ -1,109 +1,17 @@
-"use client";
-
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Trash2 } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  updatePresetAction,
-  deletePresetAction,
-} from "@/actions/preset.actions";
-import { listSkillsAction } from "@/actions/skill.actions";
-import { listAgentsAction } from "@/actions/agent.actions";
-import { toast } from "sonner";
-import type { Preset, SkillSummary, AgentSummary } from "@/types";
+import type { Preset } from "@/types";
 
 export function PresetDetail({ preset }: { preset: Preset }) {
-  const router = useRouter();
-  const [saving, setSaving] = useState(false);
-  const [availableSkills, setAvailableSkills] = useState<SkillSummary[]>([]);
-  const [availableAgents, setAvailableAgents] = useState<AgentSummary[]>([]);
-
-  const [name, setName] = useState(preset.name);
-  const [description, setDescription] = useState(preset.description);
-  const [selectedAgents, setSelectedAgents] = useState<string[]>(preset.agents);
-  const [selectedSkills, setSelectedSkills] = useState<string[]>(preset.skills);
-  const [principles, setPrinciples] = useState(
-    preset.constitution.principles.join("\n")
-  );
-  const [stack, setStack] = useState(preset.constitution.stack.join("\n"));
-  const [conventions, setConventions] = useState(
-    preset.constitution.conventions.join("\n")
-  );
-  const [projectDescription, setProjectDescription] = useState(
-    preset.claudemd.projectDescription
-  );
-  useEffect(() => {
-    listSkillsAction().then(setAvailableSkills);
-    listAgentsAction().then(setAvailableAgents);
-  }, []);
-
-  const toggleAgent = (slug: string) =>
-    setSelectedAgents((prev) =>
-      prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]
-    );
-
-  const toggleSkill = (slug: string) =>
-    setSelectedSkills((prev) =>
-      prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]
-    );
-
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      await updatePresetAction(preset.slug, {
-        name,
-        description,
-        agents: selectedAgents,
-        skills: selectedSkills,
-        constitution: {
-          principles: principles
-            .split("\n")
-            .map((s) => s.trim())
-            .filter(Boolean),
-          stack: stack
-            .split("\n")
-            .map((s) => s.trim())
-            .filter(Boolean),
-          conventions: conventions
-            .split("\n")
-            .map((s) => s.trim())
-            .filter(Boolean),
-        },
-        claudemd: { projectDescription },
-      });
-      router.refresh();
-      toast.success("Preset saved");
-    } catch (err) {
-      toast.error(`${err}`);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleDelete = async () => {
-    if (!confirm(`Delete preset "${preset.name}"?`)) return;
-    await deletePresetAction(preset.slug);
-    router.push("/presets");
-  };
-
   return (
     <div className="max-w-3xl space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">{preset.name}</h1>
-          <Badge variant="secondary" className="mt-1">
-            {preset.slug}
-          </Badge>
-        </div>
-        <Button variant="destructive" size="sm" onClick={handleDelete}>
-          <Trash2 className="mr-2 h-4 w-4" />
-          Delete
-        </Button>
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">{preset.name}</h1>
+        <Badge variant="secondary" className="mt-1">
+          {preset.slug}
+        </Badge>
       </div>
 
       <div className="space-y-6">
@@ -112,16 +20,13 @@ export function PresetDetail({ preset }: { preset: Preset }) {
             <CardTitle>General</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Name</label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} />
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-muted-foreground">Name</p>
+              <p className="text-sm">{preset.name}</p>
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Description</label>
-              <Textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-muted-foreground">Description</p>
+              <p className="text-sm">{preset.description}</p>
             </div>
           </CardContent>
         </Card>
@@ -132,18 +37,13 @@ export function PresetDetail({ preset }: { preset: Preset }) {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
-              {availableAgents.map((a) => (
-                <Badge
-                  key={a.slug}
-                  variant={
-                    selectedAgents.includes(a.slug) ? "default" : "outline"
-                  }
-                  className="cursor-pointer"
-                  onClick={() => toggleAgent(a.slug)}
-                >
-                  {a.name}
-                </Badge>
-              ))}
+              {preset.agents.length > 0 ? (
+                preset.agents.map((a) => (
+                  <Badge key={a} variant="default">{a}</Badge>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground">No agents</p>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -154,18 +54,13 @@ export function PresetDetail({ preset }: { preset: Preset }) {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
-              {availableSkills.map((s) => (
-                <Badge
-                  key={s.slug}
-                  variant={
-                    selectedSkills.includes(s.slug) ? "default" : "outline"
-                  }
-                  className="cursor-pointer"
-                  onClick={() => toggleSkill(s.slug)}
-                >
-                  {s.name}
-                </Badge>
-              ))}
+              {preset.skills.length > 0 ? (
+                preset.skills.map((s) => (
+                  <Badge key={s} variant="default">{s}</Badge>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground">No skills</p>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -175,29 +70,41 @@ export function PresetDetail({ preset }: { preset: Preset }) {
             <CardTitle>Constitution</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Principles</label>
-              <Textarea
-                value={principles}
-                onChange={(e) => setPrinciples(e.target.value)}
-                rows={3}
-              />
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-muted-foreground">Principles</p>
+              {preset.constitution.principles.length > 0 ? (
+                <ul className="list-disc list-inside text-sm space-y-1">
+                  {preset.constitution.principles.map((p, i) => (
+                    <li key={i}>{p}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-muted-foreground">None</p>
+              )}
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Stack</label>
-              <Textarea
-                value={stack}
-                onChange={(e) => setStack(e.target.value)}
-                rows={3}
-              />
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-muted-foreground">Stack</p>
+              {preset.constitution.stack.length > 0 ? (
+                <ul className="list-disc list-inside text-sm space-y-1">
+                  {preset.constitution.stack.map((s, i) => (
+                    <li key={i}>{s}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-muted-foreground">None</p>
+              )}
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Conventions</label>
-              <Textarea
-                value={conventions}
-                onChange={(e) => setConventions(e.target.value)}
-                rows={3}
-              />
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-muted-foreground">Conventions</p>
+              {preset.constitution.conventions.length > 0 ? (
+                <ul className="list-disc list-inside text-sm space-y-1">
+                  {preset.constitution.conventions.map((c, i) => (
+                    <li key={i}>{c}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-muted-foreground">None</p>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -206,27 +113,17 @@ export function PresetDetail({ preset }: { preset: Preset }) {
           <CardHeader>
             <CardTitle>CLAUDE.md</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">
-                Project Description
-              </label>
-              <Textarea
-                value={projectDescription}
-                onChange={(e) => setProjectDescription(e.target.value)}
-              />
+          <CardContent>
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-muted-foreground">Project Description</p>
+              <p className="text-sm">{preset.claudemd.projectDescription || "None"}</p>
             </div>
           </CardContent>
         </Card>
 
-        <div className="flex gap-3">
-          <Button onClick={handleSave} disabled={saving}>
-            {saving ? "Saving..." : "Save Changes"}
-          </Button>
-          <Button variant="outline" onClick={() => router.push("/presets")}>
-            Back to Presets
-          </Button>
-        </div>
+        <Button variant="outline" asChild>
+          <Link href="/presets">Back to Presets</Link>
+        </Button>
       </div>
     </div>
   );

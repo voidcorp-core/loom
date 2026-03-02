@@ -1,55 +1,11 @@
-"use client";
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Trash2 } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MarkdownEditor } from "@/components/editor/markdown-editor";
 import { FileTree } from "@/components/editor/file-tree";
-import { updateSkillAction, deleteSkillAction } from "@/actions/skill.actions";
-import { toast } from "sonner";
 import type { Skill } from "@/types";
 
 export function SkillDetail({ skill }: { skill: Skill }) {
-  const router = useRouter();
-  const [saving, setSaving] = useState(false);
-  const [name, setName] = useState(skill.frontmatter.name);
-  const [description, setDescription] = useState(skill.frontmatter.description);
-  const [allowedTools, setAllowedTools] = useState(
-    skill.frontmatter["allowed-tools"] || ""
-  );
-  const [content, setContent] = useState(skill.content);
-
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      await updateSkillAction(skill.slug, {
-        frontmatter: {
-          name,
-          description,
-          ...(allowedTools ? { "allowed-tools": allowedTools } : {}),
-        },
-        content,
-      });
-      router.refresh();
-      toast.success("Skill saved");
-    } catch (err) {
-      toast.error(`${err}`);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleDelete = async () => {
-    if (!confirm(`Delete skill "${skill.frontmatter.name}"?`)) return;
-    await deleteSkillAction(skill.slug);
-    router.push("/skills");
-  };
-
   return (
     <div className="max-w-3xl space-y-6">
       <div className="flex items-center justify-between">
@@ -59,10 +15,6 @@ export function SkillDetail({ skill }: { skill: Skill }) {
             <Badge variant="secondary">{skill.slug}</Badge>
           </div>
         </div>
-        <Button variant="destructive" size="sm" onClick={handleDelete}>
-          <Trash2 className="mr-2 h-4 w-4" />
-          Delete
-        </Button>
       </div>
 
       <div className="space-y-6">
@@ -71,25 +23,20 @@ export function SkillDetail({ skill }: { skill: Skill }) {
             <CardTitle>Frontmatter</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Name</label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} />
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-muted-foreground">Name</p>
+              <p className="text-sm">{skill.frontmatter.name}</p>
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Description</label>
-              <Textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-muted-foreground">Description</p>
+              <p className="text-sm">{skill.frontmatter.description}</p>
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Allowed Tools</label>
-              <Input
-                value={allowedTools}
-                onChange={(e) => setAllowedTools(e.target.value)}
-                placeholder="Bash(npm run *), Read, Write, Edit"
-              />
-            </div>
+            {skill.frontmatter["allowed-tools"] && (
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">Allowed Tools</p>
+                <p className="text-sm">{skill.frontmatter["allowed-tools"]}</p>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -98,7 +45,9 @@ export function SkillDetail({ skill }: { skill: Skill }) {
             <CardTitle>Content</CardTitle>
           </CardHeader>
           <CardContent>
-            <MarkdownEditor value={content} onChange={setContent} />
+            <pre className="whitespace-pre-wrap text-sm font-mono rounded-md border p-4 bg-muted/50">
+              {skill.content || "No content"}
+            </pre>
           </CardContent>
         </Card>
 
@@ -111,14 +60,9 @@ export function SkillDetail({ skill }: { skill: Skill }) {
           </CardContent>
         </Card>
 
-        <div className="flex gap-3">
-          <Button onClick={handleSave} disabled={saving}>
-            {saving ? "Saving..." : "Save Changes"}
-          </Button>
-          <Button variant="outline" onClick={() => router.push("/skills")}>
-            Back to Skills
-          </Button>
-        </div>
+        <Button variant="outline" asChild>
+          <Link href="/skills">Back to Skills</Link>
+        </Button>
       </div>
     </div>
   );

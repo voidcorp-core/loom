@@ -30,13 +30,3 @@ export interface AgentSummary {
   color?: string;
 }
 
-export interface CreateAgentInput {
-  slug: string;
-  frontmatter: AgentFrontmatter;
-  content: string;
-}
-
-export interface UpdateAgentInput {
-  frontmatter?: Partial<AgentFrontmatter>;
-  content?: string;
-}

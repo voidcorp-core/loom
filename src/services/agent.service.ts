@@ -1,21 +1,8 @@
 import { agentsPath } from "./library.service";
-import {
-  getFile,
-  listDirectory,
-  exists,
-  putFile,
-  getTree,
-  deleteDirectory,
-} from "../lib/github";
-import { parseFrontmatter, serializeFrontmatter } from "../lib/frontmatter";
-import { NotFoundError, ValidationError } from "../lib/errors";
-import {
-  Agent,
-  AgentSummary,
-  AgentFrontmatter,
-  CreateAgentInput,
-  UpdateAgentInput,
-} from "../types";
+import { getFile, listDirectory, getTree } from "../lib/github";
+import { parseFrontmatter } from "../lib/frontmatter";
+import { NotFoundError } from "../lib/errors";
+import type { Agent, AgentSummary, AgentFrontmatter } from "../types";
 
 const AGENT_FILE = "AGENT.md";
 
@@ -70,51 +57,4 @@ export async function getAgent(slug: string): Promise<Agent> {
     files,
     sha: file.sha,
   };
-}
-
-export async function createAgent(input: CreateAgentInput): Promise<Agent> {
-  const dirPath = agentsPath(input.slug);
-
-  if (await exists(dirPath)) {
-    throw new ValidationError(`Agent already exists: ${input.slug}`);
-  }
-
-  const raw = serializeFrontmatter(
-    input.frontmatter as unknown as Record<string, unknown>,
-    input.content
-  );
-  const filePath = agentsPath(input.slug, AGENT_FILE);
-  await putFile(filePath, raw, `Create agent: ${input.slug}`);
-
-  return getAgent(input.slug);
-}
-
-export async function updateAgent(
-  slug: string,
-  input: UpdateAgentInput
-): Promise<Agent> {
-  const existing = await getAgent(slug);
-
-  const newFrontmatter = {
-    ...existing.frontmatter,
-    ...input.frontmatter,
-  };
-  const newContent =
-    input.content !== undefined ? input.content : existing.content;
-
-  const raw = serializeFrontmatter(
-    newFrontmatter as unknown as Record<string, unknown>,
-    newContent
-  );
-  await putFile(existing.path, raw, `Update agent: ${slug}`, existing.sha);
-
-  return getAgent(slug);
-}
-
-export async function deleteAgent(slug: string): Promise<void> {
-  const dirPath = agentsPath(slug);
-  if (!(await exists(dirPath))) {
-    throw new NotFoundError("Agent", slug);
-  }
-  await deleteDirectory(dirPath, `Delete agent: ${slug}`);
 }

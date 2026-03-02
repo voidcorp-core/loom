@@ -1,20 +1,17 @@
 import Link from "next/link";
-import { Sparkles, Bot, Layers, Plus } from "lucide-react";
+import { Sparkles, Bot, Layers } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { getLibraryStats } from "@/services/library.service";
 import { listSkills } from "@/services/skill.service";
 import { listAgents } from "@/services/agent.service";
-import { listPresets } from "@/services/preset.service";
 
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
-  const [stats, skills, agents, presets] = await Promise.all([
+  const [stats, skills, agents] = await Promise.all([
     getLibraryStats(),
     listSkills(),
     listAgents(),
-    listPresets(),
   ]);
 
   const recentSkills = skills.slice(0, 5);
@@ -57,30 +54,6 @@ export default async function DashboardPage() {
             <div className="text-2xl font-bold">{stats.totalPresets}</div>
           </CardContent>
         </Card>
-      </div>
-
-      <div>
-        <h2 className="text-lg font-semibold mb-3">Quick Actions</h2>
-        <div className="flex flex-wrap gap-3">
-          <Button asChild>
-            <Link href="/skills/new">
-              <Plus className="mr-2 h-4 w-4" />
-              New Skill
-            </Link>
-          </Button>
-          <Button asChild variant="secondary">
-            <Link href="/agents/new">
-              <Plus className="mr-2 h-4 w-4" />
-              New Agent
-            </Link>
-          </Button>
-          <Button asChild variant="secondary">
-            <Link href="/presets/new">
-              <Plus className="mr-2 h-4 w-4" />
-              New Preset
-            </Link>
-          </Button>
-        </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">

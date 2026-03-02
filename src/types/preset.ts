@@ -28,14 +28,3 @@ export interface PresetSummary {
   skillCount: number;
 }
 
-export interface CreatePresetInput {
-  slug: string;
-  name: string;
-  description: string;
-  agents: string[];
-  skills: string[];
-  constitution: PresetConstitution;
-  claudemd: PresetClaudeMd;
-}
-
-export type UpdatePresetInput = Partial<Omit<CreatePresetInput, "slug">>;

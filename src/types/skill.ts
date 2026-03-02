@@ -24,13 +24,3 @@ export interface SkillSummary {
   description: string;
 }
 
-export interface CreateSkillInput {
-  slug: string;
-  frontmatter: SkillFrontmatter;
-  content: string;
-}
-
-export interface UpdateSkillInput {
-  frontmatter?: Partial<SkillFrontmatter>;
-  content?: string;
-}

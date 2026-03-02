@@ -1,65 +1,11 @@
-"use client";
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Trash2 } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MarkdownEditor } from "@/components/editor/markdown-editor";
 import { FileTree } from "@/components/editor/file-tree";
-import { updateAgentAction, deleteAgentAction } from "@/actions/agent.actions";
-import { toast } from "sonner";
 import type { Agent } from "@/types";
 
 export function AgentDetail({ agent }: { agent: Agent }) {
-  const router = useRouter();
-  const [saving, setSaving] = useState(false);
-  const [name, setName] = useState(agent.frontmatter.name);
-  const [description, setDescription] = useState(agent.frontmatter.description);
-  const [role, setRole] = useState(agent.frontmatter.role);
-  const [color, setColor] = useState(agent.frontmatter.color || "");
-  const [tools, setTools] = useState(agent.frontmatter.tools || "");
-  const [model, setModel] = useState(agent.frontmatter.model || "");
-  const [delegatesTo, setDelegatesTo] = useState(
-    agent.frontmatter["delegates-to"]?.join(", ") || ""
-  );
-  const [content, setContent] = useState(agent.content);
-
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      await updateAgentAction(agent.slug, {
-        frontmatter: {
-          name,
-          description,
-          role,
-          ...(color ? { color } : {}),
-          ...(tools ? { tools } : {}),
-          ...(model ? { model } : {}),
-          ...(delegatesTo
-            ? { "delegates-to": delegatesTo.split(",").map((s) => s.trim()) }
-            : {}),
-        },
-        content,
-      });
-      router.refresh();
-      toast.success("Agent saved");
-    } catch (err) {
-      toast.error(`${err}`);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleDelete = async () => {
-    if (!confirm(`Delete agent "${agent.frontmatter.name}"?`)) return;
-    await deleteAgentAction(agent.slug);
-    router.push("/agents");
-  };
-
   return (
     <div className="max-w-3xl space-y-6">
       <div className="flex items-center justify-between">
@@ -72,10 +18,6 @@ export function AgentDetail({ agent }: { agent: Agent }) {
             <Badge>{agent.frontmatter.role}</Badge>
           </div>
         </div>
-        <Button variant="destructive" size="sm" onClick={handleDelete}>
-          <Trash2 className="mr-2 h-4 w-4" />
-          Delete
-        </Button>
       </div>
 
       <div className="space-y-6">
@@ -85,53 +27,50 @@ export function AgentDetail({ agent }: { agent: Agent }) {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Name</label>
-                <Input value={name} onChange={(e) => setName(e.target.value)} />
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">Name</p>
+                <p className="text-sm">{agent.frontmatter.name}</p>
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Role</label>
-                <Input value={role} onChange={(e) => setRole(e.target.value)} />
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">Role</p>
+                <p className="text-sm">{agent.frontmatter.role}</p>
               </div>
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Description</label>
-              <Textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-muted-foreground">Description</p>
+              <p className="text-sm">{agent.frontmatter.description}</p>
             </div>
             <div className="grid gap-4 md:grid-cols-3">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Color</label>
-                <Input
-                  value={color}
-                  onChange={(e) => setColor(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Model</label>
-                <Input
-                  value={model}
-                  onChange={(e) => setModel(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Tools</label>
-                <Input
-                  value={tools}
-                  onChange={(e) => setTools(e.target.value)}
-                />
-              </div>
+              {agent.frontmatter.color && (
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-muted-foreground">Color</p>
+                  <p className="text-sm">{agent.frontmatter.color}</p>
+                </div>
+              )}
+              {agent.frontmatter.model && (
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-muted-foreground">Model</p>
+                  <p className="text-sm">{agent.frontmatter.model}</p>
+                </div>
+              )}
+              {agent.frontmatter.tools && (
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-muted-foreground">Tools</p>
+                  <p className="text-sm">{agent.frontmatter.tools}</p>
+                </div>
+              )}
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Delegates To</label>
-              <Input
-                value={delegatesTo}
-                onChange={(e) => setDelegatesTo(e.target.value)}
-                placeholder="Comma-separated agent slugs"
-              />
-            </div>
+            {agent.frontmatter["delegates-to"] &&
+              agent.frontmatter["delegates-to"].length > 0 && (
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-muted-foreground">Delegates To</p>
+                  <div className="flex flex-wrap gap-1">
+                    {agent.frontmatter["delegates-to"].map((d) => (
+                      <Badge key={d} variant="outline">{d}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
           </CardContent>
         </Card>
 
@@ -140,7 +79,9 @@ export function AgentDetail({ agent }: { agent: Agent }) {
             <CardTitle>Content</CardTitle>
           </CardHeader>
           <CardContent>
-            <MarkdownEditor value={content} onChange={setContent} />
+            <pre className="whitespace-pre-wrap text-sm font-mono rounded-md border p-4 bg-muted/50">
+              {agent.content || "No content"}
+            </pre>
           </CardContent>
         </Card>
 
@@ -153,14 +94,9 @@ export function AgentDetail({ agent }: { agent: Agent }) {
           </CardContent>
         </Card>
 
-        <div className="flex gap-3">
-          <Button type="button" onClick={handleSave} disabled={saving}>
-            {saving ? "Saving..." : "Save Changes"}
-          </Button>
-          <Button variant="outline" onClick={() => router.push("/agents")}>
-            Back to Agents
-          </Button>
-        </div>
+        <Button variant="outline" asChild>
+          <Link href="/agents">Back to Agents</Link>
+        </Button>
       </div>
     </div>
   );
