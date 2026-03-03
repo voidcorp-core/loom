@@ -52,6 +52,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script defer src="https://umami.volpionas.synology.me/u.js" data-website-id="1f2140ef-c446-4c72-92d4-12c6a849251b" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
