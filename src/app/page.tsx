@@ -38,11 +38,10 @@ export default function LandingPage() {
             <span className="font-medium text-primary">Free & Open Source</span>
           </div>
           <h1 className="mx-auto max-w-3xl text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-            The{" "}
-            <code className="rounded-md bg-primary/10 px-2 py-0.5 font-mono text-primary">
-              npm create
-            </code>{" "}
-            for AI agents.
+            AI agents,{" "}
+            <span className="text-primary">
+              scaffolded in seconds.
+            </span>
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-lg text-muted-foreground">
             Loom scaffolds production-ready AI agents, skills, and presets into

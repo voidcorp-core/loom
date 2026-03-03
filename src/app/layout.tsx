@@ -17,9 +17,30 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://loom.voidcorp.io";
+
 export const metadata: Metadata = {
-  title: "Loom",
-  description: "Agent, skill & preset library for Claude Code",
+  title: {
+    default: "Loom — AI agents, scaffolded in seconds",
+    template: "%s | Loom",
+  },
+  description:
+    "Scaffold production-ready AI agents, skills, and presets into any project. Free, open-source, no lock-in.",
+  metadataBase: new URL(siteUrl),
+  openGraph: {
+    type: "website",
+    siteName: "Loom",
+    title: "Loom — AI agents, scaffolded in seconds",
+    description:
+      "Scaffold production-ready AI agents, skills, and presets into any project. Free, open-source, no lock-in.",
+    url: siteUrl,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Loom — AI agents, scaffolded in seconds",
+    description:
+      "Scaffold production-ready AI agents, skills, and presets into any project. Free, open-source, no lock-in.",
+  },
 };
 
 export default async function RootLayout({
