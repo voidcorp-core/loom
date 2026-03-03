@@ -68,23 +68,23 @@ export default function LandingPage() {
               {
                 icon: Terminal,
                 title: "Scaffold in Seconds",
-                command: "loom add agent:customer-support --skill:zendesk",
+                command: "loom init fullstack --claude",
                 description:
-                  "One command to scaffold an agent with its skills, tools, and orchestration rules.",
+                  "One command to scaffold agents, skills, and an orchestrator into your project.",
               },
               {
                 icon: Code2,
                 title: "Framework Agnostic",
-                command: "cat .claude/agents/frontend.md",
+                command: "loom add agent frontend --target cursor",
                 description:
-                  "Plain Markdown and YAML files. Eject anytime — your code, your rules.",
+                  "Plain Markdown and YAML files. Supports Claude Code, Cursor, or any custom target.",
               },
               {
                 icon: Share2,
                 title: "Share and Discover",
-                command: "loom publish my-agent",
+                command: "loom marketplace install react-specialist",
                 description:
-                  "Publish to the marketplace. Install community agents with a single command.",
+                  "Browse and install community agents, skills, and presets from the marketplace.",
               },
             ].map((prop) => (
               <div
@@ -137,7 +137,7 @@ export default function LandingPage() {
             <FeatureCard
               icon={Terminal}
               title="Powerful CLI"
-              description="Init, add, list, publish — manage your entire agent library from the terminal with simple commands."
+              description="Init, add, list, marketplace — manage your entire agent library from the terminal with simple commands."
             />
             <FeatureCard
               icon={Shield}

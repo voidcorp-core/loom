@@ -5,14 +5,14 @@ Loom is a scaffolding tool for AI-assisted development. It consists of two parts
 1. **Backoffice** (Next.js) — web interface to browse and manage a library of agents, skills, and presets
 2. **CLI** (`@folpe/loom` on npm) — scaffolds agents, skills, and context files into any project
 
-The backoffice reads from GitHub via Octokit. The CLI bundles the library and generates output for multiple targets (Claude Code, Cursor, custom).
+The backoffice stores data in PostgreSQL via Drizzle ORM. The CLI bundles the library and generates output for multiple targets (Claude Code, Cursor, custom).
 
 ## Stack
 
 - Next.js 16 (App Router) / React 19 / TypeScript 5 (strict)
 - Tailwind CSS 4 / ShadCN UI
-- NextAuth for authentication
-- Octokit for GitHub API (read-only)
+- NextAuth for authentication (GitHub provider)
+- Drizzle ORM + Neon PostgreSQL
 - CLI: Commander.js / @clack/prompts / tsup
 
 ## Project structure
@@ -21,7 +21,8 @@ The backoffice reads from GitHub via Octokit. The CLI bundles the library and ge
 src/              # Next.js backoffice
   app/            # App Router pages
   components/     # Shared UI components
-  services/       # GitHub API services (Octokit)
+  actions/        # Server actions (CRUD, marketplace)
+  db/             # Drizzle schema and migrations
   types/          # Shared TypeScript types
 cli/              # CLI tool (@folpe/loom)
   src/            # CLI source (Commander.js)

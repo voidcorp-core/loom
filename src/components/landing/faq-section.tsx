@@ -17,7 +17,7 @@ const faqs = [
   {
     question: "Can I create and share my own agents?",
     answer:
-      "Absolutely. Create agents and skills locally with the CLI, then publish them to the Loom Marketplace with `loom publish`. Other developers can install them with a single command.",
+      "Absolutely. Create agents and skills in the backoffice, then publish them to the Loom Marketplace with one click. Other developers can install them with `loom marketplace install`.",
   },
   {
     question: "What languages and frameworks are supported?",

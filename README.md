@@ -1,36 +1,113 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Loom
 
-## Getting Started
+AI agents, scaffolded in seconds.
 
-First, run the development server:
+Loom is a scaffolding tool for AI-assisted development. It consists of two parts:
+
+- **Backoffice** ([loom.voidcorp.io](https://loom.voidcorp.io)) — web interface to browse, create, and manage a library of agents, skills, and presets. Publish to the marketplace for others to discover and install.
+- **CLI** (`@folpe/loom` on npm) — scaffold agents, skills, and presets into any project from the terminal.
+
+## Quick Start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Scaffold a full preset into your project
+npx @folpe/loom init
+
+# Or add individual resources
+npx @folpe/loom add agent frontend
+npx @folpe/loom add skill nextjs-conventions
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## CLI Commands
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Command | Description |
+|---------|-------------|
+| `loom init [preset]` | Interactive setup — pick a target, preset, agents, and skills |
+| `loom add <type> <slug>` | Add a single agent or skill to your project |
+| `loom list [type]` | List available agents, skills, and presets |
+| `loom marketplace search [query]` | Search community resources |
+| `loom marketplace install <slug>` | Install a resource from the marketplace |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Targets
 
-## Learn More
+Loom supports multiple AI coding assistants:
 
-To learn more about Next.js, take a look at the following resources:
+| Target | Flag | Output |
+|--------|------|--------|
+| Claude Code (default) | `--claude` | `.claude/` + `CLAUDE.md` |
+| Cursor | `--cursor` | `.cursor/` + `.cursorrules` |
+| Custom | `--target custom --target-dir <dir>` | Custom directory |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Examples
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+# Interactive mode — guided setup
+loom init
 
-## Deploy on Vercel
+# Non-interactive — scaffold a preset with modifications
+loom init fullstack --claude
+loom init fullstack --remove-agent database --add-skill api-design --cursor
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Add from marketplace
+loom marketplace search "react" --type skill
+loom marketplace install react-specialist
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Backoffice
+
+The backoffice at [loom.voidcorp.io](https://loom.voidcorp.io) provides:
+
+- **Library management** — browse, create, edit, and delete agents, skills, and presets
+- **Marketplace** — publish your creations for the community, discover and install others'
+- **Dashboard** — overview of your library with quick access to resources
+
+### Running locally
+
+```bash
+npm install
+npm run dev
+```
+
+## Stack
+
+- **Backoffice**: Next.js 16 (App Router) / React 19 / TypeScript / Tailwind CSS 4 / ShadCN UI
+- **Data**: Drizzle ORM + Neon PostgreSQL
+- **Auth**: NextAuth (GitHub provider)
+- **CLI**: Commander.js / @clack/prompts / tsup
+
+## Project Structure
+
+```
+src/              # Next.js backoffice
+  app/            # App Router pages
+  components/     # Shared UI components
+  actions/        # Server actions (CRUD, marketplace)
+  db/             # Drizzle schema and migrations
+  types/          # Shared TypeScript types
+cli/              # CLI tool (@folpe/loom)
+  src/            # CLI source (Commander.js)
+  data/           # Synced from library/ at build time
+library/          # Source of truth for bundled agents, skills, presets
+```
+
+## What Gets Scaffolded
+
+```
+your-project/
+├── CLAUDE.md                    # Project context file
+├── .claude/
+│   ├── orchestrator.md          # Agent coordination rules
+│   ├── agents/
+│   │   ├── frontend/AGENT.md
+│   │   ├── backend/AGENT.md
+│   │   └── review-qa/AGENT.md
+│   └── skills/
+│       ├── nextjs-conventions/
+│       └── tailwind-patterns/
+├── src/
+└── package.json
+```
+
+## License
+
+MIT
