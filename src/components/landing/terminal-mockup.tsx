@@ -20,7 +20,7 @@ export function TerminalMockup({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-xl border bg-[oklch(0.16_0.004_49.25)] text-sm shadow-2xl",
+        "overflow-hidden rounded-xl border bg-card text-sm shadow-2xl",
         className
       )}
     >
@@ -34,11 +34,11 @@ export function TerminalMockup({
           {title}
         </span>
       </div>
-      <div className="p-4 font-mono text-[13px] leading-relaxed">
+      <div className="p-4 font-mono text-[13px] leading-relaxed text-left">
         {lines.map((line, i) => (
           <div key={i} className="flex gap-2">
             {line.prefix && (
-              <span className="select-none text-green-400">{line.prefix}</span>
+              <span className="select-none text-primary">{line.prefix}</span>
             )}
             <span className={cn("text-white/80", line.className)}>
               {line.text}

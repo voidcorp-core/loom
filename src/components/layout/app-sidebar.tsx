@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 
 const navItems = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -43,10 +44,13 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="px-4 py-4">
-        <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.svg" alt="Loom" width={28} height={28} className="dark:invert" />
-          <span className="text-lg font-semibold">Loom</span>
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <Image src="/logo.svg" alt="Loom" width={28} height={28} className="dark:invert" />
+            <span className="text-lg font-semibold">Loom</span>
+          </Link>
+          <ThemeToggle />
+        </div>
       </SidebarHeader>
 
       <SidebarContent>

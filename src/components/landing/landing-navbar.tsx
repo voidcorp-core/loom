@@ -4,18 +4,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 
 const navLinks = [
   { label: "Features", href: "#features" },
   { label: "How it works", href: "#how-it-works" },
-  { label: "CLI", href: "#cli" },
+  { label: "FAQ", href: "#faq" },
 ];
 
 export function LandingNavbar() {
   const { data: session } = useSession();
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
+    <nav className="sticky top-0 z-50 w-full border-b border-white/8 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
         <Link href="/" className="flex items-center gap-2">
           <Image
@@ -40,7 +41,8 @@ export function LandingNavbar() {
           ))}
         </div>
 
-        <div>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
           {session ? (
             <Button size="sm" asChild>
               <Link href="/dashboard">Go to Dashboard</Link>

@@ -3,19 +3,20 @@ import {
   Bot,
   Sparkles,
   Layers,
-  Search,
-  MousePointerClick,
+  GitBranch,
+  Share2,
+  Shield,
   Terminal,
-  Store,
-  ExternalLink,
+  Code2,
+  FolderTree,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { CopyCommand } from "@/components/ui/copy-command";
 import { LandingNavbar } from "@/components/landing/landing-navbar";
-import { TerminalMockup } from "@/components/landing/terminal-mockup";
-import { FeatureCard } from "@/components/landing/feature-card";
-import { StepCard } from "@/components/landing/step-card";
 import { LandingFooter } from "@/components/landing/landing-footer";
+import { FeatureCard } from "@/components/landing/feature-card";
+import { LoomWeaver } from "@/components/landing/loom-weaver";
+import { InteractiveCLI } from "@/components/landing/interactive-cli";
+import { FAQSection } from "@/components/landing/faq-section";
 
 export default function LandingPage() {
   return (
@@ -24,73 +25,86 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section className="relative overflow-hidden">
+        <LoomWeaver />
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <div className="h-[600px] w-[600px] rounded-full bg-primary/5 blur-3xl" />
         </div>
         <div className="relative mx-auto max-w-5xl px-6 pb-20 pt-24 text-center md:pt-32">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-1.5 text-sm">
-            <span className="font-medium">Now on npm</span>
-            <span className="text-muted-foreground">&mdash; v1.1.0</span>
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+            </span>
+            <span className="font-medium text-primary">Free & Open Source</span>
           </div>
-          <h1 className="mx-auto max-w-2xl text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-            Scaffold AI agents{" "}
-            <span className="text-muted-foreground">into any project</span>
+          <h1 className="mx-auto max-w-3xl text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
+            The{" "}
+            <code className="rounded-md bg-primary/10 px-2 py-0.5 font-mono text-primary">
+              npm create
+            </code>{" "}
+            for AI agents.
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-muted-foreground">
-            A curated library of agents, skills & presets for Claude Code.
-            Browse, pick, and scaffold — in seconds.
+          <p className="mx-auto mt-5 max-w-xl text-lg text-muted-foreground">
+            Loom scaffolds production-ready AI agents, skills, and presets into
+            any project. No lock-in, just pure code.
           </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Button size="lg" asChild>
-              <Link href="/login">Get Started</Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <a
-                href="https://www.npmjs.com/package/@folpe/loom"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="gap-2"
-              >
-                View on npm
-                <ExternalLink className="h-4 w-4" />
-              </a>
-            </Button>
+          <div className="mx-auto mt-10 max-w-lg">
+            <InteractiveCLI />
           </div>
-          <div className="mx-auto mt-12 max-w-lg">
-            <TerminalMockup
-              title="loom init"
-              lines={[
-                { text: "npx @folpe/loom init", prefix: "$" },
-                { text: "" },
-                {
-                  text: "Welcome to Loom!",
-                  className: "text-green-400 font-semibold",
-                },
-                { text: "Scanning project...", className: "text-white/50" },
-                { text: "" },
-                {
-                  text: "? Select a preset:",
-                  className: "text-cyan-400",
-                },
-                {
-                  text: "  > fullstack-nextjs",
-                  className: "text-white font-semibold",
-                },
-                {
-                  text: "    frontend-react",
-                  className: "text-white/50",
-                },
-                {
-                  text: "    api-backend",
-                  className: "text-white/50",
-                },
-                { text: "" },
-                {
-                  text: "Scaffolded 4 agents, 6 skills into .claude/",
-                  className: "text-green-400",
-                },
-              ]}
-            />
+        </div>
+      </section>
+
+      {/* Value Props — How it works */}
+      <section id="how-it-works" className="py-20">
+        <div className="mx-auto max-w-5xl px-6">
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl font-bold tracking-tight">
+              Scaffold in seconds
+            </h2>
+            <p className="mt-2 text-muted-foreground">
+              Three commands. Full AI development environment.
+            </p>
+          </div>
+          <div className="grid gap-8 md:grid-cols-3">
+            {[
+              {
+                icon: Terminal,
+                title: "Scaffold in Seconds",
+                command: "loom add agent:customer-support --skill:zendesk",
+                description:
+                  "One command to scaffold an agent with its skills, tools, and orchestration rules.",
+              },
+              {
+                icon: Code2,
+                title: "Framework Agnostic",
+                command: "cat .claude/agents/frontend.md",
+                description:
+                  "Plain Markdown and YAML files. Eject anytime — your code, your rules.",
+              },
+              {
+                icon: Share2,
+                title: "Share and Discover",
+                command: "loom publish my-agent",
+                description:
+                  "Publish to the marketplace. Install community agents with a single command.",
+              },
+            ].map((prop) => (
+              <div
+                key={prop.title}
+                className="rounded-xl border bg-card p-6 transition-all hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5"
+              >
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                  <prop.icon className="h-5 w-5 text-primary" />
+                </div>
+                <h3 className="mb-2 text-lg font-semibold">{prop.title}</h3>
+                <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+                  {prop.description}
+                </p>
+                <code className="block rounded-md bg-muted/50 px-3 py-2 font-mono text-xs text-muted-foreground">
+                  $ {prop.command}
+                </code>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -106,15 +120,15 @@ export default function LandingPage() {
               A modular library to supercharge your AI-assisted workflow.
             </p>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
             <FeatureCard
               icon={Bot}
-              title="Agents"
+              title="Agent Management"
               description="Specialized AI agents with defined roles, tools, and orchestration rules — ready to drop into your project."
             />
             <FeatureCard
               icon={Sparkles}
-              title="Skills"
+              title="Skills System"
               description="Domain-specific conventions and patterns that guide agents to write code matching your stack and style."
             />
             <FeatureCard
@@ -122,134 +136,102 @@ export default function LandingPage() {
               title="Presets"
               description="Pre-configured bundles of agents and skills. Pick a preset and scaffold an entire team in one command."
             />
-          </div>
-        </div>
-      </section>
-
-      {/* How it works */}
-      <section id="how-it-works" className="py-20">
-        <div className="mx-auto max-w-5xl px-6">
-          <div className="mb-12 text-center">
-            <h2 className="text-3xl font-bold tracking-tight">
-              How it works
-            </h2>
-            <p className="mt-2 text-muted-foreground">
-              Three steps to a fully configured AI development environment.
-            </p>
-          </div>
-          <div className="grid gap-10 md:grid-cols-3">
-            <StepCard
-              step={1}
-              icon={Search}
-              title="Browse"
-              description="Explore the library of agents, skills, and presets — or search the community marketplace."
+            <FeatureCard
+              icon={GitBranch}
+              title="Version Control"
+              description="Every change to your library is tracked via Git. Roll back, branch, and collaborate with confidence."
             />
-            <StepCard
-              step={2}
-              icon={MousePointerClick}
-              title="Pick"
-              description="Select exactly what you need. Mix and match agents and skills, or grab a full preset."
+            <FeatureCard
+              icon={Shield}
+              title="No Lock-in"
+              description="Loom generates plain files. No runtime dependency, no vendor lock-in. Eject anytime."
             />
-            <StepCard
-              step={3}
-              icon={Terminal}
-              title="Scaffold"
-              description="Run loom init and your selection is scaffolded into your project's .claude/ directory."
+            <FeatureCard
+              icon={Share2}
+              title="Marketplace"
+              description="Discover and share community-contributed agents, skills, and presets. One command to install."
             />
           </div>
         </div>
       </section>
 
-      {/* CLI */}
-      <section id="cli" className="bg-muted/30 py-20">
+      {/* Objection Handler — Your Code, Your Stack */}
+      <section className="py-20">
         <div className="mx-auto max-w-5xl px-6">
           <div className="grid items-center gap-12 md:grid-cols-2">
             <div>
               <h2 className="text-3xl font-bold tracking-tight">
-                Powerful CLI
+                Your Code, Your Stack
               </h2>
               <p className="mt-3 text-muted-foreground">
-                Install the CLI globally and scaffold agents, skills & presets
-                from your terminal.
+                Loom doesn&apos;t add runtime dependencies. It generates plain
+                Markdown and YAML files directly in your project. Inspect them,
+                edit them, or delete them — it&apos;s all just files.
               </p>
               <div className="mt-6">
                 <CopyCommand command="npm install -g @folpe/loom" />
               </div>
-              <div className="mt-6 space-y-2 text-sm">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <code className="rounded bg-muted px-2 py-0.5 font-mono text-foreground">
-                    loom init
-                  </code>
-                  <span>Scaffold a preset into your project</span>
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <code className="rounded bg-muted px-2 py-0.5 font-mono text-foreground">
-                    loom add
-                  </code>
-                  <span>Add individual agents or skills</span>
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <code className="rounded bg-muted px-2 py-0.5 font-mono text-foreground">
-                    loom list
-                  </code>
-                  <span>Browse the full library</span>
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <code className="rounded bg-muted px-2 py-0.5 font-mono text-foreground">
-                    loom marketplace
-                  </code>
-                  <span>Explore community contributions</span>
-                </div>
+            </div>
+            <div className="rounded-xl border bg-card p-6 font-mono text-sm">
+              <div className="flex items-center gap-2 text-muted-foreground mb-3">
+                <FolderTree className="h-4 w-4" />
+                <span>Project structure</span>
+              </div>
+              <div className="space-y-1 text-muted-foreground">
+                <div>your-project/</div>
+                <div className="pl-4">├── .claude/</div>
+                <div className="pl-8 text-primary">├── agents/</div>
+                <div className="pl-12 text-foreground/70">├── frontend.md</div>
+                <div className="pl-12 text-foreground/70">├── backend.md</div>
+                <div className="pl-12 text-foreground/70">└── review-qa.md</div>
+                <div className="pl-8 text-primary">├── skills/</div>
+                <div className="pl-12 text-foreground/70">├── nextjs-conventions.md</div>
+                <div className="pl-12 text-foreground/70">└── tailwind-patterns.md</div>
+                <div className="pl-8 text-primary">└── orchestrator.md</div>
+                <div className="pl-4 text-primary">├── CLAUDE.md</div>
+                <div className="pl-4">├── src/</div>
+                <div className="pl-4">└── package.json</div>
               </div>
             </div>
-            <TerminalMockup
-              title="loom add"
-              lines={[
-                { text: "loom add agent frontend", prefix: "$" },
-                { text: "" },
-                {
-                  text: "Adding agent: frontend",
-                  className: "text-cyan-400",
-                },
-                {
-                  text: "  → .claude/agents/frontend.md",
-                  className: "text-white/60",
-                },
-                { text: "" },
-                { text: "loom add skill nextjs-conventions", prefix: "$" },
-                { text: "" },
-                {
-                  text: "Adding skill: nextjs-conventions",
-                  className: "text-cyan-400",
-                },
-                {
-                  text: "  → .claude/skills/nextjs-conventions.md",
-                  className: "text-white/60",
-                },
-                { text: "" },
-                { text: "Done.", className: "text-green-400 font-semibold" },
-              ]}
-            />
           </div>
         </div>
       </section>
 
-      {/* Marketplace */}
-      <section className="py-20">
-        <div className="mx-auto max-w-5xl px-6 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-            <Store className="h-6 w-6 text-primary" />
-          </div>
-          <h2 className="text-3xl font-bold tracking-tight">Marketplace</h2>
-          <p className="mx-auto mt-3 max-w-md text-muted-foreground">
-            Discover community-contributed agents, skills, and presets.
-            Share your own creations with the community.
+      {/* CTA Repeat */}
+      <section className="border-y border-white/8 bg-card/30 py-16">
+        <div className="mx-auto max-w-xl px-6 text-center">
+          <h2 className="text-2xl font-bold tracking-tight">
+            Ready to scaffold?
+          </h2>
+          <p className="mt-2 text-muted-foreground">
+            Get started with a single command.
           </p>
           <div className="mt-6">
-            <Button size="lg" variant="outline" asChild>
-              <Link href="/marketplace">Explore Marketplace</Link>
-            </Button>
+            <CopyCommand command="npx @folpe/loom init" />
           </div>
+          <div className="mt-4">
+            <Link
+              href="/login"
+              className="text-sm text-primary hover:underline"
+            >
+              Or explore the library in the backoffice &rarr;
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="py-20">
+        <div className="mx-auto max-w-5xl px-6">
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl font-bold tracking-tight">
+              Frequently Asked Questions
+            </h2>
+            <p className="mt-2 text-muted-foreground">
+              Everything you need to know about Loom.
+            </p>
+          </div>
+          <FAQSection />
         </div>
       </section>
 

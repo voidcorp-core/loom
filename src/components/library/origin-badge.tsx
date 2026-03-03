@@ -9,17 +9,17 @@ const config: Record<
   bundled: {
     label: "Bundled",
     icon: Package,
-    className: "border-blue-200 text-blue-700 dark:border-blue-800 dark:text-blue-400",
+    className: "border-primary/30 text-primary",
   },
   created: {
     label: "Custom",
     icon: User,
-    className: "border-emerald-200 text-emerald-700 dark:border-emerald-800 dark:text-emerald-400",
+    className: "border-emerald-400/30 text-emerald-400",
   },
   installed: {
     label: "Marketplace",
     icon: Download,
-    className: "border-purple-200 text-purple-700 dark:border-purple-800 dark:text-purple-400",
+    className: "border-violet-400/30 text-violet-400",
   },
 };
 
@@ -40,7 +40,7 @@ export function OriginBadge({ origin, isPublic }: OriginBadgeProps) {
         {label}
       </Badge>
       {isPublic && (
-        <Badge variant="outline" className="text-xs gap-1 border-amber-200 text-amber-700 dark:border-amber-800 dark:text-amber-400">
+        <Badge variant="outline" className="text-xs gap-1 border-amber-400/30 text-amber-400">
           <Globe className="h-3 w-3" />
           Published
         </Badge>

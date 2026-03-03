@@ -35,7 +35,7 @@ export function CopyCommand({ command, className }: CopyCommandProps) {
         className="shrink-0 text-muted-foreground hover:text-foreground transition-colors"
       >
         {copied ? (
-          <Check className="h-4 w-4 text-green-500" />
+          <Check className="h-4 w-4 text-primary" />
         ) : (
           <Copy className="h-4 w-4" />
         )}

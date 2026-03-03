@@ -6,8 +6,11 @@ export default async function LoginPage() {
   if (session) redirect("/dashboard");
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-sm space-y-6 text-center">
+    <div className="relative flex min-h-screen items-center justify-center">
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <div className="h-[400px] w-[400px] rounded-full bg-primary/5 blur-3xl" />
+      </div>
+      <div className="relative w-full max-w-sm space-y-6 text-center border border-primary/10 bg-card/50 backdrop-blur-sm rounded-2xl p-8">
         <div className="space-y-2">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold text-xl">
             L

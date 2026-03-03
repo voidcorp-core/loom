@@ -18,7 +18,7 @@ const footerLinks = [
 
 export function LandingFooter() {
   return (
-    <footer className="border-t">
+    <footer className="border-t border-white/8">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 px-6 py-8 sm:flex-row sm:justify-between">
         <div className="flex items-center gap-2">
           <Image
