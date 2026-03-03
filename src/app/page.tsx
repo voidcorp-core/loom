@@ -3,7 +3,6 @@ import {
   Bot,
   Sparkles,
   Layers,
-  GitBranch,
   Share2,
   Shield,
   Terminal,
@@ -136,9 +135,9 @@ export default function LandingPage() {
               description="Pre-configured bundles of agents and skills. Pick a preset and scaffold an entire team in one command."
             />
             <FeatureCard
-              icon={GitBranch}
-              title="Version Control"
-              description="Every change to your library is tracked via Git. Roll back, branch, and collaborate with confidence."
+              icon={Terminal}
+              title="Powerful CLI"
+              description="Init, add, list, publish — manage your entire agent library from the terminal with simple commands."
             />
             <FeatureCard
               icon={Shield}
