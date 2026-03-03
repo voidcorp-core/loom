@@ -59,6 +59,26 @@ loom add skill tailwind-patterns
 
 Files are written to `.claude/agents/` and `.claude/skills/` in your current directory.
 
+If the resource isn't found in the bundled library, Loom will automatically check your local library (`~/.loom/library/`) for marketplace-installed resources.
+
+### Browse the marketplace
+
+```bash
+loom marketplace search              # list all public resources
+loom marketplace search tailwind     # search by keyword
+loom marketplace search --type skill # filter by type
+```
+
+Alias: `loom mp search`
+
+### Install from the marketplace
+
+```bash
+loom marketplace install ticket-craft
+```
+
+This downloads the resource to your local library (`~/.loom/library/`). You can then use it with `loom add` in any project.
+
 ## What's included
 
 ### Agents
