@@ -22,8 +22,11 @@ export interface Agent {
   sha: string;
   resourceId?: string;
   isForked?: boolean;
+  origin?: ResourceOrigin;
   isPublic?: boolean;
 }
+
+export type ResourceOrigin = "bundled" | "created" | "installed";
 
 export interface AgentSummary {
   slug: string;
@@ -32,6 +35,8 @@ export interface AgentSummary {
   role: string;
   color?: string;
   isForked?: boolean;
+  origin?: ResourceOrigin;
   resourceId?: string;
+  isPublic?: boolean;
 }
 

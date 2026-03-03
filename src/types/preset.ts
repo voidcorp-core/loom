@@ -20,8 +20,11 @@ export interface Preset {
   rawContent?: string;
   resourceId?: string;
   isForked?: boolean;
+  origin?: ResourceOrigin;
   isPublic?: boolean;
 }
+
+import type { ResourceOrigin } from "./agent";
 
 export interface PresetSummary {
   slug: string;
@@ -30,6 +33,8 @@ export interface PresetSummary {
   agentCount: number;
   skillCount: number;
   isForked?: boolean;
+  origin?: ResourceOrigin;
   resourceId?: string;
+  isPublic?: boolean;
 }
 

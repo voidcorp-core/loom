@@ -3,6 +3,7 @@
 import { eq, isNull, and, asc, desc, isNotNull, ilike, sql } from "drizzle-orm";
 import { db } from "../db";
 import { resources, users } from "../db/schema";
+import type { ResourceFile } from "@/types/common";
 
 type ResourceType = "agent" | "skill" | "preset";
 
@@ -13,24 +14,33 @@ export interface ResourceRow {
   title: string;
   content: string;
   metadata: Record<string, unknown> | null;
+  files: ResourceFile[] | null;
   ownerId: string | null;
   sourceId: string | null;
   isPublic: boolean;
 }
 
+export type ResourceOrigin = "bundled" | "created" | "installed";
+
 export interface ResourceRowWithForkFlag extends ResourceRow {
   isForked: boolean;
+  origin: ResourceOrigin;
 }
 
 /**
  * Get a resource for a specific user: returns the user's fork if it exists,
  * otherwise falls back to the base resource.
  */
+function deriveOrigin(ownerId: string | null, sourceId: string | null): ResourceOrigin {
+  if (!ownerId) return "bundled";
+  return sourceId ? "installed" : "created";
+}
+
 export async function getResourceForUser(
   type: ResourceType,
   slug: string,
   userId: string | null
-): Promise<(ResourceRow & { isForked: boolean }) | null> {
+): Promise<(ResourceRow & { isForked: boolean; origin: ResourceOrigin }) | null> {
   if (userId) {
     const fork = await db
       .select()
@@ -45,7 +55,12 @@ export async function getResourceForUser(
       .then((rows) => rows[0]);
 
     if (fork) {
-      return { ...fork, metadata: fork.metadata as Record<string, unknown> | null, isForked: true };
+      return {
+        ...fork,
+        metadata: fork.metadata as Record<string, unknown> | null,
+        isForked: true,
+        origin: deriveOrigin(fork.ownerId, fork.sourceId),
+      };
     }
   }
 
@@ -63,7 +78,7 @@ export async function getResourceForUser(
 
   if (!base) return null;
 
-  return { ...base, metadata: base.metadata as Record<string, unknown> | null, isForked: false };
+  return { ...base, metadata: base.metadata as Record<string, unknown> | null, isForked: false, origin: "bundled" };
 }
 
 /**
@@ -85,6 +100,7 @@ export async function listResourcesForUser(
       ...row,
       metadata: row.metadata as Record<string, unknown> | null,
       isForked: false,
+      origin: "bundled" as ResourceOrigin,
     }));
   }
 
@@ -103,12 +119,14 @@ export async function listResourcesForUser(
         ...fork,
         metadata: fork.metadata as Record<string, unknown> | null,
         isForked: true,
+        origin: deriveOrigin(fork.ownerId, fork.sourceId),
       };
     }
     return {
       ...base,
       metadata: base.metadata as Record<string, unknown> | null,
       isForked: false,
+      origin: "bundled" as ResourceOrigin,
     };
   });
 
@@ -118,10 +136,22 @@ export async function listResourcesForUser(
       ...fork,
       metadata: fork.metadata as Record<string, unknown> | null,
       isForked: true,
+      origin: deriveOrigin(fork.ownerId, fork.sourceId),
     });
   }
 
-  return merged.sort((a, b) => a.title.localeCompare(b.title));
+  const originOrder: Record<ResourceOrigin, number> = {
+    created: 0,
+    installed: 1,
+    bundled: 2,
+  };
+
+  return merged.sort((a, b) => {
+    const oa = originOrder[a.origin] ?? 2;
+    const ob = originOrder[b.origin] ?? 2;
+    if (oa !== ob) return oa - ob;
+    return a.title.localeCompare(b.title);
+  });
 }
 
 /**
@@ -130,7 +160,7 @@ export async function listResourcesForUser(
 export async function forkResource(
   baseResourceId: string,
   userId: string,
-  updates: { title?: string; content?: string; metadata?: Record<string, unknown> }
+  updates: { title?: string; content?: string; metadata?: Record<string, unknown>; files?: ResourceFile[] }
 ): Promise<ResourceRow> {
   const base = await db
     .select()
@@ -167,6 +197,7 @@ export async function forkResource(
       title: updates.title ?? base.title,
       content: updates.content ?? base.content,
       metadata: updates.metadata ?? (base.metadata as Record<string, unknown> | null),
+      files: updates.files ?? (base.files as ResourceFile[] | null),
       ownerId: userId,
       sourceId: base.id,
       isPublic: false,
@@ -182,7 +213,7 @@ export async function forkResource(
 export async function createResource(
   type: ResourceType,
   userId: string,
-  data: { slug: string; title: string; content: string; metadata?: Record<string, unknown> }
+  data: { slug: string; title: string; content: string; metadata?: Record<string, unknown>; files?: ResourceFile[] }
 ): Promise<ResourceRow> {
   // Check slug uniqueness for this user
   const existing = await db
@@ -209,6 +240,7 @@ export async function createResource(
       title: data.title,
       content: data.content,
       metadata: data.metadata ?? null,
+      files: data.files ?? null,
       ownerId: userId,
       sourceId: null,
       isPublic: false,
@@ -224,7 +256,7 @@ export async function createResource(
 export async function updateOwnResource(
   resourceId: string,
   userId: string,
-  updates: { title?: string; content?: string; metadata?: Record<string, unknown> }
+  updates: { title?: string; content?: string; metadata?: Record<string, unknown>; files?: ResourceFile[] }
 ): Promise<ResourceRow> {
   const row = await db
     .select()
@@ -242,11 +274,37 @@ export async function updateOwnResource(
       ...(updates.title !== undefined && { title: updates.title }),
       ...(updates.content !== undefined && { content: updates.content }),
       ...(updates.metadata !== undefined && { metadata: updates.metadata }),
+      ...(updates.files !== undefined && { files: updates.files }),
     })
     .where(eq(resources.id, resourceId))
     .returning();
 
   return updated as ResourceRow;
+}
+
+/**
+ * Delete a resource owned by the user.
+ * Published resources must be unpublished first.
+ */
+export async function deleteOwnResource(
+  resourceId: string,
+  userId: string
+): Promise<void> {
+  const row = await db
+    .select()
+    .from(resources)
+    .where(and(eq(resources.id, resourceId), eq(resources.ownerId, userId)))
+    .then((rows) => rows[0]);
+
+  if (!row) {
+    throw new Error("Resource not found or not owned by you");
+  }
+
+  if (row.isPublic) {
+    throw new Error("Unpublish this resource from the marketplace before deleting it");
+  }
+
+  await db.delete(resources).where(eq(resources.id, resourceId));
 }
 
 // ---------------------------------------------------------------------------
@@ -417,6 +475,7 @@ export async function installResource(
       title: source.title,
       content: source.content,
       metadata: source.metadata as Record<string, unknown> | null,
+      files: source.files as ResourceFile[] | null,
       ownerId: userId,
       sourceId: source.id,
       isPublic: false,

@@ -1,4 +1,5 @@
-import { FileTreeNode } from "./common";
+import { FileTreeNode, ResourceFile } from "./common";
+import type { ResourceOrigin } from "./agent";
 
 export interface SkillFrontmatter {
   name: string;
@@ -14,10 +15,12 @@ export interface Skill {
   rawContent: string;
   path: string;
   directoryPath: string;
+  supportingFiles: ResourceFile[];
   files: FileTreeNode[];
   sha: string;
   resourceId?: string;
   isForked?: boolean;
+  origin?: ResourceOrigin;
   isPublic?: boolean;
 }
 
@@ -26,6 +29,8 @@ export interface SkillSummary {
   name: string;
   description: string;
   isForked?: boolean;
+  origin?: ResourceOrigin;
   resourceId?: string;
+  isPublic?: boolean;
 }
 

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Bot } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { OriginBadge } from "./origin-badge";
 import type { AgentSummary } from "@/types";
 
 export function AgentCard({ agent }: { agent: AgentSummary }) {
@@ -12,9 +13,7 @@ export function AgentCard({ agent }: { agent: AgentSummary }) {
           <div className="flex items-center gap-2">
             <Bot className="h-4 w-4 text-muted-foreground" />
             <CardTitle className="text-base">{agent.name}</CardTitle>
-            {agent.isForked && (
-              <Badge variant="outline" className="text-xs">Forked</Badge>
-            )}
+            <OriginBadge origin={agent.origin} isPublic={agent.isPublic} />
             <Badge variant="secondary" className="ml-auto text-xs">
               {agent.role}
             </Badge>

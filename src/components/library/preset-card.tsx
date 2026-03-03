@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Layers } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { OriginBadge } from "./origin-badge";
 import type { PresetSummary } from "@/types";
 
 export function PresetCard({ preset }: { preset: PresetSummary }) {
@@ -12,9 +13,7 @@ export function PresetCard({ preset }: { preset: PresetSummary }) {
           <div className="flex items-center gap-2">
             <Layers className="h-4 w-4 text-muted-foreground" />
             <CardTitle className="text-base">{preset.name}</CardTitle>
-            {preset.isForked && (
-              <Badge variant="outline" className="text-xs">Forked</Badge>
-            )}
+            <OriginBadge origin={preset.origin} isPublic={preset.isPublic} />
           </div>
         </CardHeader>
         <CardContent>

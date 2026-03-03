@@ -3,11 +3,12 @@ import { db } from "../db";
 import { resources } from "../db/schema";
 import { parseFrontmatter } from "../lib/frontmatter";
 import { NotFoundError } from "../lib/errors";
+import { buildFileTree } from "../lib/file-tree-utils";
 import {
   getResourceForUser,
   listResourcesForUser,
 } from "./resource.service";
-import type { Skill, SkillSummary, SkillFrontmatter } from "../types";
+import type { Skill, SkillSummary, SkillFrontmatter, ResourceFile } from "../types";
 
 export async function listSkills(): Promise<SkillSummary[]> {
   const rows = await db
@@ -18,11 +19,15 @@ export async function listSkills(): Promise<SkillSummary[]> {
 
   return rows.map((row) => {
     const meta = row.metadata as Record<string, unknown> | null;
-    return {
-      slug: row.slug,
-      name: (meta?.name as string) || row.title,
-      description: (meta?.description as string) || "",
-    };
+    const name = (meta?.name as string) || row.title;
+    let description = (meta?.description as string) || "";
+    if (!description) {
+      try {
+        const fm = parseFrontmatter<Record<string, unknown>>(row.content).data;
+        description = (fm.description as string) || "";
+      } catch { /* unparseable frontmatter */ }
+    }
+    return { slug: row.slug, name, description };
   });
 }
 
@@ -32,12 +37,22 @@ export async function listSkillsForUser(
   const rows = await listResourcesForUser("skill", userId);
   return rows.map((row) => {
     const meta = row.metadata;
+    const name = (meta?.name as string) || row.title;
+    let description = (meta?.description as string) || "";
+    if (!description) {
+      try {
+        const fm = parseFrontmatter<Record<string, unknown>>(row.content).data;
+        description = (fm.description as string) || "";
+      } catch { /* unparseable frontmatter */ }
+    }
     return {
       slug: row.slug,
-      name: (meta?.name as string) || row.title,
-      description: (meta?.description as string) || "",
+      name,
+      description,
       isForked: row.isForked,
+      origin: row.origin,
       resourceId: row.id,
+      isPublic: row.isPublic,
     };
   });
 }
@@ -60,6 +75,7 @@ export async function getSkill(slug: string): Promise<Skill> {
   }
 
   const { data, content } = parseFrontmatter<SkillFrontmatter>(row.content);
+  const supportingFiles = (row.files as ResourceFile[] | null) ?? [];
 
   return {
     slug,
@@ -68,7 +84,8 @@ export async function getSkill(slug: string): Promise<Skill> {
     rawContent: row.content,
     path: `library/skills/${slug}/SKILL.md`,
     directoryPath: `library/skills/${slug}`,
-    files: [],
+    supportingFiles,
+    files: buildFileTree(supportingFiles),
     sha: row.id,
   };
 }
@@ -84,6 +101,7 @@ export async function getSkillForUser(
   }
 
   const { data, content } = parseFrontmatter<SkillFrontmatter>(row.content);
+  const supportingFiles = (row.files as ResourceFile[] | null) ?? [];
 
   return {
     slug,
@@ -92,10 +110,12 @@ export async function getSkillForUser(
     rawContent: row.content,
     path: `library/skills/${slug}/SKILL.md`,
     directoryPath: `library/skills/${slug}`,
-    files: [],
+    supportingFiles,
+    files: buildFileTree(supportingFiles),
     sha: row.id,
     resourceId: row.id,
     isForked: row.isForked,
+    origin: row.origin,
     isPublic: row.isPublic,
   };
 }

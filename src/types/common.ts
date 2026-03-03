@@ -1,3 +1,8 @@
+export interface ResourceFile {
+  path: string;      // relative path: "examples/api.md"
+  content: string;   // text content of the file
+}
+
 export interface FileTreeNode {
   name: string;
   path: string;

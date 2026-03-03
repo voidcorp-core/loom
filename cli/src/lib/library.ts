@@ -63,6 +63,32 @@ function listFiles(dir: string): string[] {
     .sort();
 }
 
+export interface SkillFile {
+  relativePath: string; // e.g. "SKILL.md", "examples/api.md"
+  content: string;
+}
+
+const TEXT_EXTENSIONS = new Set([
+  ".md", ".ts", ".js", ".sh", ".dot", ".yaml", ".yml", ".json", ".css", ".html",
+]);
+
+function walkDir(dir: string, base = ""): string[] {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  const results: string[] = [];
+  for (const entry of entries) {
+    const rel = base ? `${base}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) {
+      results.push(...walkDir(path.join(dir, entry.name), rel));
+    } else if (entry.isFile()) {
+      const ext = path.extname(entry.name).toLowerCase();
+      if (TEXT_EXTENSIONS.has(ext)) {
+        results.push(rel);
+      }
+    }
+  }
+  return results;
+}
+
 // --- Public API ---
 
 export async function listAgents(): Promise<AgentSummary[]> {
@@ -151,6 +177,22 @@ export async function getSkill(
   const filePath = path.join(DATA_DIR, "skills", slug, "SKILL.md");
   const raw = fs.readFileSync(filePath, "utf-8");
   return { slug, rawContent: raw };
+}
+
+export async function getSkillWithFiles(
+  slug: string
+): Promise<{ slug: string; mainContent: string; files: SkillFile[] }> {
+  const skillDir = path.join(DATA_DIR, "skills", slug);
+  const mainPath = path.join(skillDir, "SKILL.md");
+  const mainContent = fs.readFileSync(mainPath, "utf-8");
+
+  const relativePaths = walkDir(skillDir);
+  const files: SkillFile[] = relativePaths.map((relativePath) => ({
+    relativePath,
+    content: fs.readFileSync(path.join(skillDir, relativePath), "utf-8"),
+  }));
+
+  return { slug, mainContent, files };
 }
 
 export async function getPreset(slug: string): Promise<Preset> {

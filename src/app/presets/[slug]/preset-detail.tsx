@@ -1,9 +1,13 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ResourceEditButton } from "@/components/library/resource-edit-button";
 import { PublishToggle } from "@/components/library/publish-toggle";
+import { PublishBanner } from "@/components/library/publish-banner";
+import { DeleteResourceButton } from "@/components/library/delete-resource-button";
+import { OriginBadge } from "@/components/library/origin-badge";
 import type { Preset } from "@/types";
 
 interface PresetDetailProps {
@@ -12,25 +16,41 @@ interface PresetDetailProps {
 }
 
 export function PresetDetail({ preset, isAuthenticated }: PresetDetailProps) {
+  const isOwned = preset.origin && preset.origin !== "bundled";
+
   return (
     <div className="max-w-3xl space-y-6">
+      <Button variant="ghost" size="sm" asChild className="-ml-2">
+        <Link href="/presets">
+          <ArrowLeft className="h-4 w-4 mr-1" />
+          Presets
+        </Link>
+      </Button>
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{preset.name}</h1>
           <div className="flex items-center gap-2 mt-1">
             <Badge variant="secondary">{preset.slug}</Badge>
-            {preset.isForked && (
-              <Badge variant="outline">Your fork</Badge>
-            )}
+            <OriginBadge origin={preset.origin} isPublic={preset.isPublic} />
           </div>
         </div>
         {isAuthenticated && preset.resourceId && (
           <div className="flex items-center gap-2">
-            {preset.isForked && (
-              <PublishToggle
-                resourceId={preset.resourceId}
-                isPublic={!!preset.isPublic}
-              />
+            {isOwned && (
+              <>
+                <PublishToggle
+                  resourceId={preset.resourceId}
+                  isPublic={!!preset.isPublic}
+                />
+                <DeleteResourceButton
+                  resourceId={preset.resourceId}
+                  type="preset"
+                  slug={preset.slug}
+                  title={preset.name}
+                  isPublic={!!preset.isPublic}
+                />
+              </>
             )}
             <ResourceEditButton
               resourceId={preset.resourceId}
@@ -43,6 +63,10 @@ export function PresetDetail({ preset, isAuthenticated }: PresetDetailProps) {
           </div>
         )}
       </div>
+
+      {isAuthenticated && isOwned && !preset.isPublic && preset.resourceId && (
+        <PublishBanner resourceId={preset.resourceId} />
+      )}
 
       <div className="space-y-6">
         <Card>
@@ -139,9 +163,6 @@ export function PresetDetail({ preset, isAuthenticated }: PresetDetailProps) {
           </CardContent>
         </Card>
 
-        <Button variant="outline" asChild>
-          <Link href="/presets">Back to Presets</Link>
-        </Button>
       </div>
     </div>
   );

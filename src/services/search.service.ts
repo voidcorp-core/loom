@@ -2,6 +2,7 @@ import { eq, isNull, and, or, ilike, sql } from "drizzle-orm";
 import type { SQL } from "drizzle-orm";
 import { db } from "../db";
 import { resources } from "../db/schema";
+import { parseFrontmatter } from "../lib/frontmatter";
 import type { SearchResult, LibraryItemType } from "../types";
 
 export async function searchLibrary(
@@ -42,11 +43,20 @@ export async function searchLibrary(
 
   return rows.map((row) => {
     const meta = row.metadata as Record<string, unknown> | null;
+    let description = (meta?.description as string) || "";
+    if (!description) {
+      try {
+        const fm = parseFrontmatter<Record<string, unknown>>(row.content).data;
+        description = (fm.description as string) || "";
+      } catch {
+        // YAML presets or unparseable content — skip
+      }
+    }
     return {
       type: row.type as LibraryItemType,
       slug: row.slug,
       name: (meta?.name as string) || row.title,
-      description: (meta?.description as string) || "",
+      description,
     };
   });
 }

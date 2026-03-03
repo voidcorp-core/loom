@@ -1,5 +1,6 @@
 import pc from "picocolors";
 import { listAgents, listSkills, listPresets } from "../lib/library.js";
+import { listLocalResources } from "../lib/local-library.js";
 
 function truncate(str: string, max: number): string {
   if (str.length <= max) return str;
@@ -12,6 +13,8 @@ function padEnd(str: string, len: number): string {
 
 export async function listCommand(type?: string): Promise<void> {
   try {
+    const bundledSlugs = new Set<string>();
+
     if (!type || type === "agents") {
       const agents = await listAgents();
       console.log(pc.bold(pc.cyan("\n  Agents")));
@@ -20,6 +23,7 @@ export async function listCommand(type?: string): Promise<void> {
         console.log(pc.dim("  No agents found."));
       }
       for (const a of agents) {
+        bundledSlugs.add(`agent:${a.slug}`);
         console.log(
           `  ${padEnd(pc.green(a.slug), 30)} ${padEnd(a.name, 25)} ${pc.dim(truncate(a.description, 40))}`
         );
@@ -34,6 +38,7 @@ export async function listCommand(type?: string): Promise<void> {
         console.log(pc.dim("  No skills found."));
       }
       for (const s of skills) {
+        bundledSlugs.add(`skill:${s.slug}`);
         console.log(
           `  ${padEnd(pc.green(s.slug), 30)} ${padEnd(s.name, 25)} ${pc.dim(truncate(s.description, 40))}`
         );
@@ -48,9 +53,25 @@ export async function listCommand(type?: string): Promise<void> {
         console.log(pc.dim("  No presets found."));
       }
       for (const p of presets) {
+        bundledSlugs.add(`preset:${p.slug}`);
         const meta = pc.dim(`(${p.agentCount} agents, ${p.skillCount} skills)`);
         console.log(
           `  ${padEnd(pc.green(p.slug), 30)} ${padEnd(p.name, 25)} ${meta}`
+        );
+      }
+    }
+
+    // Local library section (~/.loom/library/)
+    const localItems = listLocalResources().filter(
+      (item) => !bundledSlugs.has(`${item.type}:${item.slug}`)
+    );
+
+    if (localItems.length > 0) {
+      console.log(pc.bold(pc.magenta("\n  Installed (marketplace)")));
+      console.log(pc.dim("  " + "─".repeat(60)));
+      for (const item of localItems) {
+        console.log(
+          `  ${padEnd(pc.green(item.slug), 30)} ${pc.dim(`[${item.type}]`)}`
         );
       }
     }

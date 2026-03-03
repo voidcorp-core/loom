@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { OriginBadge } from "./origin-badge";
 import type { SkillSummary } from "@/types";
 
 export function SkillCard({ skill }: { skill: SkillSummary }) {
@@ -12,9 +12,7 @@ export function SkillCard({ skill }: { skill: SkillSummary }) {
           <div className="flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-muted-foreground" />
             <CardTitle className="text-base">{skill.name}</CardTitle>
-            {skill.isForked && (
-              <Badge variant="outline" className="text-xs">Forked</Badge>
-            )}
+            <OriginBadge origin={skill.origin} isPublic={skill.isPublic} />
           </div>
         </CardHeader>
         <CardContent>

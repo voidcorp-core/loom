@@ -1,10 +1,14 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FileTree } from "@/components/editor/file-tree";
 import { ResourceEditButton } from "@/components/library/resource-edit-button";
 import { PublishToggle } from "@/components/library/publish-toggle";
+import { PublishBanner } from "@/components/library/publish-banner";
+import { DeleteResourceButton } from "@/components/library/delete-resource-button";
+import { OriginBadge } from "@/components/library/origin-badge";
 import type { Agent } from "@/types";
 
 interface AgentDetailProps {
@@ -13,8 +17,17 @@ interface AgentDetailProps {
 }
 
 export function AgentDetail({ agent, isAuthenticated }: AgentDetailProps) {
+  const isOwned = agent.origin && agent.origin !== "bundled";
+
   return (
     <div className="max-w-3xl space-y-6">
+      <Button variant="ghost" size="sm" asChild className="-ml-2">
+        <Link href="/agents">
+          <ArrowLeft className="h-4 w-4 mr-1" />
+          Agents
+        </Link>
+      </Button>
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
@@ -23,18 +36,25 @@ export function AgentDetail({ agent, isAuthenticated }: AgentDetailProps) {
           <div className="flex items-center gap-2 mt-1">
             <Badge variant="secondary">{agent.slug}</Badge>
             <Badge>{agent.frontmatter.role}</Badge>
-            {agent.isForked && (
-              <Badge variant="outline">Your fork</Badge>
-            )}
+            <OriginBadge origin={agent.origin} isPublic={agent.isPublic} />
           </div>
         </div>
         {isAuthenticated && agent.resourceId && (
           <div className="flex items-center gap-2">
-            {agent.isForked && (
-              <PublishToggle
-                resourceId={agent.resourceId}
-                isPublic={!!agent.isPublic}
-              />
+            {isOwned && (
+              <>
+                <PublishToggle
+                  resourceId={agent.resourceId}
+                  isPublic={!!agent.isPublic}
+                />
+                <DeleteResourceButton
+                  resourceId={agent.resourceId}
+                  type="agent"
+                  slug={agent.slug}
+                  title={agent.frontmatter.name}
+                  isPublic={!!agent.isPublic}
+                />
+              </>
             )}
             <ResourceEditButton
               resourceId={agent.resourceId}
@@ -47,6 +67,10 @@ export function AgentDetail({ agent, isAuthenticated }: AgentDetailProps) {
           </div>
         )}
       </div>
+
+      {isAuthenticated && isOwned && !agent.isPublic && agent.resourceId && (
+        <PublishBanner resourceId={agent.resourceId} />
+      )}
 
       <div className="space-y-6">
         <Card>
@@ -122,9 +146,6 @@ export function AgentDetail({ agent, isAuthenticated }: AgentDetailProps) {
           </CardContent>
         </Card>
 
-        <Button variant="outline" asChild>
-          <Link href="/agents">Back to Agents</Link>
-        </Button>
       </div>
     </div>
   );

@@ -9,6 +9,17 @@ import {
 } from "./resource.service";
 import type { Preset, PresetSummary } from "../types";
 
+function extractPresetDescription(meta: Record<string, unknown> | null, content: string): string {
+  const fromMeta = (meta?.description as string) || "";
+  if (fromMeta) return fromMeta;
+  try {
+    const parsed = parseYaml<Record<string, unknown>>(content);
+    return (parsed.description as string) || "";
+  } catch {
+    return "";
+  }
+}
+
 export async function listPresets(): Promise<PresetSummary[]> {
   const rows = await db
     .select()
@@ -21,7 +32,7 @@ export async function listPresets(): Promise<PresetSummary[]> {
     return {
       slug: row.slug,
       name: (meta?.name as string) || row.title,
-      description: (meta?.description as string) || "",
+      description: extractPresetDescription(meta, row.content),
       agentCount: (meta?.agentCount as number) || 0,
       skillCount: (meta?.skillCount as number) || 0,
     };
@@ -37,11 +48,13 @@ export async function listPresetsForUser(
     return {
       slug: row.slug,
       name: (meta?.name as string) || row.title,
-      description: (meta?.description as string) || "",
+      description: extractPresetDescription(meta, row.content),
       agentCount: (meta?.agentCount as number) || 0,
       skillCount: (meta?.skillCount as number) || 0,
       isForked: row.isForked,
+      origin: row.origin,
       resourceId: row.id,
+      isPublic: row.isPublic,
     };
   });
 }
@@ -85,6 +98,7 @@ export async function getPresetForUser(
     rawContent: row.content,
     resourceId: row.id,
     isForked: row.isForked,
+    origin: row.origin,
     isPublic: row.isPublic,
   };
 }

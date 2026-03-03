@@ -8,6 +8,7 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { relations, sql } from "drizzle-orm";
+import type { ResourceFile } from "@/types/common";
 
 // ---------------------------------------------------------------------------
 // Users (minimal — DEV-161 will extend)
@@ -44,6 +45,7 @@ export const resources = pgTable(
     title: text("title").notNull(),
     content: text("content").notNull(),
     metadata: jsonb("metadata").$type<Record<string, unknown>>(),
+    files: jsonb("files").$type<ResourceFile[] | null>(),
     ownerId: text("owner_id").references(() => users.id, {
       onDelete: "cascade",
     }),

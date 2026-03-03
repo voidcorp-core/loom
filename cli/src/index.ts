@@ -3,6 +3,10 @@ import { Command } from "commander";
 import { listCommand } from "./commands/list.js";
 import { addCommand } from "./commands/add.js";
 import { initCommand } from "./commands/init.js";
+import {
+  marketplaceSearchCommand,
+  marketplaceInstallCommand,
+} from "./commands/marketplace.js";
 import { resolveTarget, DEFAULT_TARGET, listTargetNames, BUILTIN_TARGETS } from "./lib/target.js";
 import { loadConfig } from "./lib/config.js";
 
@@ -83,6 +87,29 @@ program
       target,
       targetExplicit,
     });
+  });
+
+const mp = program
+  .command("marketplace")
+  .alias("mp")
+  .description("Browse and install community resources");
+
+mp.command("search")
+  .description("Search the marketplace")
+  .argument("[query]", "Search query")
+  .option("--type <type>", "Filter by type: agent, skill, preset")
+  .option("--sort <sort>", "Sort: popular, recent", "popular")
+  .action(
+    async (query: string | undefined, opts: { type?: string; sort?: string }) => {
+      await marketplaceSearchCommand(query, opts);
+    }
+  );
+
+mp.command("install")
+  .description("Install a resource from the marketplace")
+  .argument("<slug>", "Resource slug to install")
+  .action(async (slug: string) => {
+    await marketplaceInstallCommand(slug);
   });
 
 program.parse();

@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { TargetConfig } from "./target.js";
+import type { SkillFile } from "./library.js";
 
 function ensureDir(dirPath: string): void {
   fs.mkdirSync(dirPath, { recursive: true });
@@ -20,6 +21,21 @@ export function writeSkill(target: TargetConfig, slug: string, content: string, 
   const filePath = path.join(dir, "SKILL.md");
   fs.writeFileSync(filePath, content, "utf-8");
   return filePath;
+}
+
+export function writeSkillDir(
+  target: TargetConfig,
+  slug: string,
+  files: SkillFile[],
+  cwd = process.cwd()
+): string {
+  const dir = path.join(cwd, target.dir, target.skillsSubdir, slug);
+  for (const file of files) {
+    const filePath = path.join(dir, file.relativePath);
+    ensureDir(path.dirname(filePath));
+    fs.writeFileSync(filePath, file.content, "utf-8");
+  }
+  return dir;
 }
 
 export function writeOrchestrator(target: TargetConfig, content: string, cwd = process.cwd()): string {

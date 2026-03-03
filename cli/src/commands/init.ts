@@ -7,11 +7,11 @@ import {
   listSkills,
   getPreset,
   getAgent,
-  getSkill,
+  getSkillWithFiles,
   type Preset,
   type AgentSummary,
 } from "../lib/library.js";
-import { writeAgent, writeSkill, writeContextFile, writeOrchestrator } from "../lib/writer.js";
+import { writeAgent, writeSkillDir, writeContextFile, writeOrchestrator } from "../lib/writer.js";
 import { generateContextFile, generateOrchestrator, type AgentWithSkills } from "../lib/generator.js";
 import { type TargetConfig, BUILTIN_TARGETS, resolveTarget } from "../lib/target.js";
 import { saveConfig } from "../lib/config.js";
@@ -265,7 +265,7 @@ async function generateAndWrite(preset: Preset, agentSlugs: string[], skillSlugs
     agentSlugs.map((slug) => getAgent(slug))
   );
   const skillResults = await Promise.allSettled(
-    skillSlugs.map((slug) => getSkill(slug))
+    skillSlugs.map((slug) => getSkillWithFiles(slug))
   );
 
   // Write agents (skip orchestrator — it will be generated separately)
@@ -321,8 +321,9 @@ async function generateAndWrite(preset: Preset, agentSlugs: string[], skillSlugs
     const slug = skillSlugs[i];
     const result = skillResults[i];
     if (result.status === "fulfilled") {
-      writeSkill(target, slug, result.value.rawContent);
-      console.log(pc.green(`  ✓ Skill: ${slug}`));
+      writeSkillDir(target, slug, result.value.files);
+      const fileCount = result.value.files.length;
+      console.log(pc.green(`  ✓ Skill: ${slug} (${fileCount} file${fileCount !== 1 ? "s" : ""})`));
     } else {
       console.log(pc.yellow(`  ⚠ Skill "${slug}" skipped: ${result.reason}`));
     }
