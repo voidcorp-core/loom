@@ -4,7 +4,12 @@
       "Bash(ls:*)",
       "Bash(pnpm:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "mcp__claude_ai_Linear__list_issues",
+      "mcp__claude_ai_Linear__save_issue",
+      "mcp__claude_ai_Linear__get_issue"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": ["loam"]
 }

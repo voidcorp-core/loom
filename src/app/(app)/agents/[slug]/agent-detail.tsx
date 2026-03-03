@@ -9,6 +9,7 @@ import { PublishToggle } from "@/components/library/publish-toggle";
 import { PublishBanner } from "@/components/library/publish-banner";
 import { DeleteResourceButton } from "@/components/library/delete-resource-button";
 import { OriginBadge } from "@/components/library/origin-badge";
+import { CopyCommand } from "@/components/ui/copy-command";
 import type { Agent } from "@/types";
 
 interface AgentDetailProps {
@@ -67,6 +68,14 @@ export function AgentDetail({ agent, isAuthenticated }: AgentDetailProps) {
           </div>
         )}
       </div>
+
+      <CopyCommand
+        command={
+          !isOwned || isAuthenticated
+            ? `npx @folpe/loom add agent ${agent.slug}`
+            : `npx @folpe/loom marketplace install ${agent.slug}`
+        }
+      />
 
       {isAuthenticated && isOwned && !agent.isPublic && agent.resourceId && (
         <PublishBanner resourceId={agent.resourceId} />

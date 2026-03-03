@@ -9,6 +9,7 @@ import { PublishToggle } from "@/components/library/publish-toggle";
 import { PublishBanner } from "@/components/library/publish-banner";
 import { DeleteResourceButton } from "@/components/library/delete-resource-button";
 import { OriginBadge } from "@/components/library/origin-badge";
+import { CopyCommand } from "@/components/ui/copy-command";
 import type { Skill } from "@/types";
 
 interface SkillDetailProps {
@@ -65,6 +66,14 @@ export function SkillDetail({ skill, isAuthenticated }: SkillDetailProps) {
           </div>
         )}
       </div>
+
+      <CopyCommand
+        command={
+          !isOwned || isAuthenticated
+            ? `npx @folpe/loom add skill ${skill.slug}`
+            : `npx @folpe/loom marketplace install ${skill.slug}`
+        }
+      />
 
       {isAuthenticated && isOwned && !skill.isPublic && skill.resourceId && (
         <PublishBanner resourceId={skill.resourceId} />

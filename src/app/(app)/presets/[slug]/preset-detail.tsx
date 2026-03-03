@@ -8,6 +8,7 @@ import { PublishToggle } from "@/components/library/publish-toggle";
 import { PublishBanner } from "@/components/library/publish-banner";
 import { DeleteResourceButton } from "@/components/library/delete-resource-button";
 import { OriginBadge } from "@/components/library/origin-badge";
+import { CopyCommand } from "@/components/ui/copy-command";
 import type { Preset } from "@/types";
 
 interface PresetDetailProps {
@@ -63,6 +64,14 @@ export function PresetDetail({ preset, isAuthenticated }: PresetDetailProps) {
           </div>
         )}
       </div>
+
+      <CopyCommand
+        command={
+          !isOwned || isAuthenticated
+            ? `npx @folpe/loom init ${preset.slug}`
+            : `npx @folpe/loom marketplace install ${preset.slug}`
+        }
+      />
 
       {isAuthenticated && isOwned && !preset.isPublic && preset.resourceId && (
         <PublishBanner resourceId={preset.resourceId} />

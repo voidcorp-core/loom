@@ -29,7 +29,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
-  { title: "Dashboard", href: "/", icon: LayoutDashboard },
+  { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { title: "Skills", href: "/skills", icon: Sparkles },
   { title: "Agents", href: "/agents", icon: Bot },
   { title: "Presets", href: "/presets", icon: Layers },
@@ -56,8 +56,8 @@ export function AppSidebar() {
             <SidebarMenu>
               {navItems.map((item) => {
                 const isActive =
-                  item.href === "/"
-                    ? pathname === "/"
+                  item.href === "/dashboard"
+                    ? pathname === "/dashboard"
                     : pathname.startsWith(item.href);
                 return (
                   <SidebarMenuItem key={item.href}>

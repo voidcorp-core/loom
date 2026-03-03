@@ -3,7 +3,7 @@ import { auth, signIn } from "@/lib/auth";
 
 export default async function LoginPage() {
   const session = await auth();
-  if (session) redirect("/");
+  if (session) redirect("/dashboard");
 
   return (
     <div className="flex min-h-screen items-center justify-center">
@@ -20,7 +20,7 @@ export default async function LoginPage() {
         <form
           action={async () => {
             "use server";
-            await signIn("github", { redirectTo: "/" });
+            await signIn("github", { redirectTo: "/dashboard" });
           }}
         >
           <button

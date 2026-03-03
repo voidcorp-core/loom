@@ -1,12 +1,18 @@
 "use client";
 
 import { useTransition } from "react";
-import { Download, Bot, Sparkles, Layers } from "lucide-react";
+import { Download, Bot, Sparkles, Layers, Terminal } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { installResourceAction } from "@/actions/marketplace.actions";
 import type { MarketplaceItem } from "@/services/resource.service";
 
@@ -24,6 +30,14 @@ interface MarketplaceCardProps {
 export function MarketplaceCard({ item, isAuthenticated }: MarketplaceCardProps) {
   const [isPending, startTransition] = useTransition();
   const Icon = typeIcons[item.type] ?? Bot;
+
+  function handleCopyCli(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    const command = `npx @folpe/loom marketplace install ${item.slug}`;
+    navigator.clipboard.writeText(command);
+    toast.success("Copied to clipboard");
+  }
 
   function handleInstall(e: React.MouseEvent) {
     e.preventDefault();
@@ -71,6 +85,21 @@ export function MarketplaceCard({ item, isAuthenticated }: MarketplaceCardProps)
               <Download className="h-3 w-3 inline mr-1" />
               {item.installCount}
             </span>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-8 w-8"
+                    onClick={handleCopyCli}
+                  >
+                    <Terminal className="h-3.5 w-3.5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Copy CLI command</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             {isAuthenticated && (
               <Button
                 size="sm"
